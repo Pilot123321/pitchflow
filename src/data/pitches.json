@@ -1,77 +1,5 @@
 [
   {
-    "founderName": "3213",
-    "founderTitle": "321",
-    "founderAvatar": "3",
-    "startupName": "312",
-    "tagline": "312",
-    "description": "312",
-    "videoUrl": "https://www.youtube.com/shorts/CquxOOpO59M",
-    "category": "AI/ML",
-    "stage": "Idea",
-    "traction": "312",
-    "location": "321",
-    "askAmount": "312",
-    "calendlyUrl": "https://calendly.com",
-    "linkedinUrl": "",
-    "websiteUrl": "",
-    "gradient": "from-amber-600 to-orange-800",
-    "tier": "launch",
-    "needType": "users",
-    "needLabel": "312",
-    "needText": "",
-    "earlyPerk": "312",
-    "watchRate": "",
-    "problem": "",
-    "solution": "",
-    "team": [],
-    "updates": [],
-    "id": "1781080183834",
-    "upvotes": 1,
-    "comments": 0,
-    "chatRequests": 0,
-    "waitlistCount": 1,
-    "createdAt": "2026-06-10T08:29:43.834Z"
-  },
-  {
-    "founderName": "ign",
-    "founderTitle": "Builder",
-    "founderAvatar": "I",
-    "startupName": "ign",
-    "tagline": "Skibidi toilet video game",
-    "description": "Skibidi toilet video game — designed to make this effortless, fast, and genuinely delightful from the very first use.",
-    "videoUrl": "",
-    "category": "Consumer",
-    "stage": "Idea",
-    "traction": "Just posted",
-    "location": "ign",
-    "askAmount": "",
-    "calendlyUrl": "https://calendly.com",
-    "linkedinUrl": "",
-    "websiteUrl": "",
-    "gradient": "from-lime-600 to-green-800",
-    "tier": "idea",
-    "needType": "users",
-    "needLabel": "Validating the idea",
-    "needText": "Looking for 30 early users to try this for a week and tell me if it actually helps. Join the waitlist to be one of them.",
-    "watchRate": "idea-stage",
-    "problem": "Today, people handle \"skibidi toilet video game\" through clunky, manual workarounds that don't scale and waste their time.",
-    "solution": "Skibidi toilet video game — designed to make this effortless, fast, and genuinely delightful from the very first use.",
-    "team": [],
-    "updates": [
-      {
-        "date": "2026-06-10T07:15:37.649Z",
-        "text": "Brainstormed and posted to Ideas today."
-      }
-    ],
-    "id": "1781075737663",
-    "upvotes": 1,
-    "comments": 1,
-    "chatRequests": 0,
-    "waitlistCount": 0,
-    "createdAt": "2026-06-10T07:15:37.663Z"
-  },
-  {
     "id": "1",
     "founderName": "Sarah Chen",
     "founderTitle": "CEO & Co-founder",
@@ -85,8 +13,8 @@
     "traction": "12 beta users, $2K MRR",
     "location": "San Francisco, CA",
     "askAmount": "$500K",
-    "upvotes": 159,
-    "comments": 23,
+    "upvotes": 161,
+    "comments": 25,
     "chatRequests": 8,
     "calendlyUrl": "https://calendly.com",
     "linkedinUrl": "https://linkedin.com",
@@ -97,7 +25,7 @@
     "needType": "users",
     "needLabel": "Looking for beta testers",
     "needText": "We need 25 data teams to stress-test the pipeline generator before our public launch. Join the beta and you'll get white-glove onboarding.",
-    "waitlistCount": 613,
+    "waitlistCount": 615,
     "watchRate": "82% watch to end",
     "problem": "Data teams burn weeks hand-building and babysitting brittle ETL pipelines. The moment a source schema changes, everything silently breaks.",
     "solution": "DataWeave points an agent at your sources and auto-generates tested, self-healing pipelines — then monitors them so you don't have to.",
@@ -121,10 +49,19 @@
       {
         "date": "2026-03-20T00:00:00Z",
         "text": "Crossed $2K MRR with our first 12 design partners."
+      },
+      {
+        "date": "2026-06-10T13:37:07.691Z",
+        "text": "API smoke update"
+      },
+      {
+        "date": "2026-06-10T13:37:09.622Z",
+        "text": "Dashboard smoke update"
       }
     ],
     "earlyPerk": "50% off for life",
-    "videoSeconds": 37
+    "videoSeconds": 37,
+    "demoImageUrl": "/demos/1.png"
   },
   {
     "id": "2",
@@ -136,7 +73,7 @@
     "description": "Small businesses will soon face carbon reporting requirements but have zero tools built for them. GreenLedger automatically tracks emissions from existing accounting data. 340 on our waitlist.",
     "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
     "category": "Climate",
-    "stage": "Idea",
+    "stage": "Pre-seed",
     "traction": "340 waitlist signups",
     "location": "Austin, TX",
     "askAmount": "$250K",
@@ -170,7 +107,8 @@
       }
     ],
     "earlyPerk": "Free Pro for 12 months",
-    "videoSeconds": 44
+    "videoSeconds": 44,
+    "demoImageUrl": "/demos/2.png"
   },
   {
     "id": "3",
@@ -220,7 +158,8 @@
         "text": "Signed LOIs with all 3 pilot clinics — moving to paid contracts next month."
       }
     ],
-    "videoSeconds": 51
+    "videoSeconds": 51,
+    "demoImageUrl": "/demos/3.png"
   },
   {
     "id": "4",
@@ -275,7 +214,8 @@
         "text": "Passed $8K MRR across 45 teams — net revenue retention now 118%."
       }
     ],
-    "videoSeconds": 58
+    "videoSeconds": 58,
+    "demoImageUrl": "/demos/4.png"
   },
   {
     "id": "5",
@@ -325,7 +265,8 @@
         "text": "Crossed $200K/mo in processed payroll across 18 companies."
       }
     ],
-    "videoSeconds": 34
+    "videoSeconds": 34,
+    "demoImageUrl": "/demos/5.png"
   },
   {
     "id": "6",
@@ -371,7 +312,8 @@
       }
     ],
     "earlyPerk": "Lifetime premium, free",
-    "videoSeconds": 41
+    "videoSeconds": 41,
+    "demoImageUrl": "/demos/6.png"
   },
   {
     "id": "7",
@@ -416,7 +358,8 @@
         "text": "800 teachers in the pilot reached 15K students this term."
       }
     ],
-    "videoSeconds": 48
+    "videoSeconds": 48,
+    "demoImageUrl": "/demos/7.png"
   },
   {
     "id": "8",
@@ -466,7 +409,8 @@
         "text": "Cut empty miles 30% for our first 25 carrier partners at $50K MRR."
       }
     ],
-    "videoSeconds": 55
+    "videoSeconds": 55,
+    "demoImageUrl": "/demos/8.png"
   },
   {
     "id": "101",
@@ -512,7 +456,8 @@
       }
     ],
     "earlyPerk": "Subscription exemption for life",
-    "videoSeconds": 55
+    "videoSeconds": 55,
+    "demoImageUrl": "/demos/101.png"
   },
   {
     "id": "102",
@@ -558,7 +503,8 @@
       }
     ],
     "earlyPerk": "60% off forever",
-    "videoSeconds": 31
+    "videoSeconds": 31,
+    "demoImageUrl": "/demos/102.png"
   },
   {
     "id": "103",
@@ -604,6 +550,7 @@
       }
     ],
     "earlyPerk": "First year free",
-    "videoSeconds": 38
+    "videoSeconds": 38,
+    "demoImageUrl": "/demos/103.png"
   }
 ]

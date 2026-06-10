@@ -46,6 +46,7 @@ export interface Pitch {
   needLabel?: string;
   needText?: string;
   earlyPerk?: string;
+  demoImageUrl?: string;
   videoSeconds?: number;
   waitlistCount?: number;
   watchRate?: string;
@@ -111,6 +112,7 @@ export interface MeritEntry {
   committed: boolean;
   supporterNumber: number;
   joinedAt: string;
+  honored?: boolean;
 }
 
 const meritPath = path.join(process.cwd(), "src/data/merits.json");
@@ -129,6 +131,46 @@ export function recordMerit(entry: Omit<MeritEntry, "joinedAt">): MeritEntry {
   merits.push(full);
   fs.writeFileSync(meritPath, JSON.stringify(merits, null, 2));
   return full;
+}
+
+export function setMeritHonored(pitchId: string, supporterNumber: number, honored: boolean): boolean {
+  const merits = getMerits();
+  const entry = merits.find((m) => m.pitchId === pitchId && m.supporterNumber === supporterNumber);
+  if (!entry) return false;
+  entry.honored = honored;
+  fs.writeFileSync(meritPath, JSON.stringify(merits, null, 2));
+  return true;
+}
+
+export function appendUpdate(pitchId: string, text: string): Pitch | null {
+  const pitches = getPitches();
+  const pitch = pitches.find((p) => p.id === pitchId);
+  if (!pitch) return null;
+  pitch.updates = [...(pitch.updates ?? []), { date: new Date().toISOString(), text }];
+  fs.writeFileSync(dataPath, JSON.stringify(pitches, null, 2));
+  return pitch;
+}
+
+// --- Upvote ledger (dedup for signed-in users) ---
+
+const upvotesPath = path.join(process.cwd(), "src/data/upvotes.json");
+
+export function hasUpvotedBy(pitchId: string, email: string): boolean {
+  try {
+    const all: { pitchId: string; email: string }[] = JSON.parse(fs.readFileSync(upvotesPath, "utf-8"));
+    return all.some((u) => u.pitchId === pitchId && u.email === email);
+  } catch {
+    return false;
+  }
+}
+
+export function recordUpvoteBy(pitchId: string, email: string) {
+  let all: { pitchId: string; email: string }[] = [];
+  try {
+    all = JSON.parse(fs.readFileSync(upvotesPath, "utf-8"));
+  } catch {}
+  all.push({ pitchId, email });
+  fs.writeFileSync(upvotesPath, JSON.stringify(all, null, 2));
 }
 
 // --- Comments ---

@@ -155,6 +155,10 @@ export default function ProfilePage() {
           </div>
         )}
 
+        <div className="mb-5 text-right">
+          <Link href="/dashboard" className="text-clay text-xs font-bold">Founder? Open your dashboard →</Link>
+        </div>
+
         <div className="space-y-4">
           {merits.map((m) => {
             const tier = MERIT_TIERS[m.tier] ?? MERIT_TIERS.believer;

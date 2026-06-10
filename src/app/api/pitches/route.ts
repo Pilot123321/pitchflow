@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
     needLabel: body.needLabel || NEED_CTA[needType].label,
     needText: body.needText || "",
     earlyPerk: body.earlyPerk || undefined,
+    demoImageUrl: body.demoImageUrl || undefined,
     watchRate: body.watchRate || "",
     problem: body.problem || "",
     solution: body.solution || "",

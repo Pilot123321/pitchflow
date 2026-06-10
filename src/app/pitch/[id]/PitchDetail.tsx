@@ -43,6 +43,7 @@ interface Pitch {
   needLabel?: string;
   needText?: string;
   earlyPerk?: string;
+  demoImageUrl?: string;
   waitlistCount?: number;
   watchRate?: string;
   problem?: string;
@@ -58,7 +59,15 @@ interface Comment {
   createdAt: string;
 }
 
-export default function PitchDetail({ pitch }: { pitch: Pitch }) {
+export interface TopBeliever {
+  name: string;
+  tier: string;
+  supporterNumber: number;
+}
+
+const TIER_ICON: Record<string, string> = { founding: "🛠️", contributor: "✍️", believer: "🌱" };
+
+export default function PitchDetail({ pitch, topBelievers = [] }: { pitch: Pitch; topBelievers?: TopBeliever[] }) {
   const [showModal, setShowModal] = useState(false);
   const [upvotes, setUpvotes] = useState(pitch.upvotes);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -127,16 +136,17 @@ export default function PitchDetail({ pitch }: { pitch: Pitch }) {
 
   return (
     <div className="min-h-screen pb-28">
-      {/* Video / Hero */}
-      <div className={`relative aspect-[9/12] max-h-[55vh] bg-gradient-to-br ${sceneFor(pitch.gradient)}`}>
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-20 h-20 rounded-full bg-cream/15 backdrop-blur-sm flex items-center justify-center border-2 border-cream/40">
-            <svg className="w-8 h-8 text-cream ml-1" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-        </div>
+      {/* Hero: product demo image (video player returns when videos go live) */}
+      <div className={`relative aspect-[3/2] max-h-[48vh] w-full bg-gradient-to-br ${sceneFor(pitch.gradient)}`}>
+        {pitch.demoImageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={pitch.demoImageUrl}
+            alt={`${pitch.startupName} product demo`}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
+        <div className="absolute inset-0 bg-black/10" />
         <Link href="/" className="absolute top-[max(1rem,env(safe-area-inset-top))] left-4 w-10 h-10 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center z-10">
           <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -262,6 +272,27 @@ export default function PitchDetail({ pitch }: { pitch: Pitch }) {
                   <span className="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-clay" />
                   <p className="text-ink/40 text-[10px]">{fmtDate(u.date)}</p>
                   <p className="text-ink/80 text-sm leading-relaxed mt-0.5">{u.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Early believers wall */}
+        {topBelievers.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-ink/50 text-[11px] font-bold uppercase tracking-wider mb-3">
+              Early believers
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {topBelievers.map((b) => (
+                <div
+                  key={`${b.name}-${b.supporterNumber}`}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-dashed border-ink/20 bg-ink/[0.02]"
+                >
+                  <span className="text-sm">{TIER_ICON[b.tier] ?? "🌱"}</span>
+                  <span className="text-ink text-xs font-semibold">{b.name}</span>
+                  <span className="text-ink/35 text-[10px] font-bold">No. {b.supporterNumber.toLocaleString()}</span>
                 </div>
               ))}
             </div>

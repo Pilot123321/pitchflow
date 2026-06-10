@@ -21,6 +21,15 @@ export default function CoffeeChatModal({ pitchId, startupName, founderName, cal
 
 
   useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (session?.user) {
       setName((n) => n || session.user?.name || "");
       setEmail((e) => e || session.user?.email || "");
@@ -44,7 +53,7 @@ export default function CoffeeChatModal({ pitchId, startupName, founderName, cal
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative paper rounded-t-3xl sm:rounded-2xl w-full sm:max-w-md p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] animate-slide-up">
         {sent ? (
@@ -89,6 +98,7 @@ export default function CoffeeChatModal({ pitchId, startupName, founderName, cal
                 <input
                   type="text"
                   required
+                  autoFocus
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full px-4 py-3 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"

@@ -18,5 +18,26 @@
     "committed": true,
     "supporterNumber": 1,
     "joinedAt": "2026-06-10T08:41:49.241Z"
+  },
+  {
+    "pitchId": "1",
+    "name": "Smoke Test",
+    "email": "smoke@test.dev",
+    "tier": "founding",
+    "feedback": "feedback text",
+    "committed": true,
+    "supporterNumber": 614,
+    "joinedAt": "2026-06-10T13:32:46.460Z"
+  },
+  {
+    "pitchId": "1",
+    "name": "Smoke Test",
+    "email": "smoke@test.dev",
+    "tier": "founding",
+    "feedback": "feedback text",
+    "committed": true,
+    "supporterNumber": 615,
+    "joinedAt": "2026-06-10T13:33:13.499Z",
+    "honored": true
   }
 ]

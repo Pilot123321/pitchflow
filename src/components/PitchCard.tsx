@@ -342,7 +342,7 @@ export default function PitchCard({
           </div>
         </Link>
 
-        <button onClick={handleUpvote} className="relative flex flex-col items-center gap-1 group">
+        <button onClick={handleUpvote} data-action="upvote" className="relative flex flex-col items-center gap-1 group">
           {burstKey > 0 && (
             <span key={burstKey} className="absolute inset-0 z-10" aria-hidden>
               {BURST_PARTICLES.map((p, i) => (

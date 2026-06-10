@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Fredoka } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -23,6 +23,10 @@ const fredoka = Fredoka({
 export const metadata: Metadata = {
   title: "PitchFlow - Discover Startups in 60 Seconds",
   description: "A short-form video platform for startup pitches. Watch founders pitch, upvote, and request coffee chats.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#fdf7ea",
 };
 
 export default function RootLayout({

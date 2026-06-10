@@ -17,6 +17,7 @@ export default function SubmitPage() {
     tagline: "",
     description: "",
     videoUrl: "",
+    demoImageUrl: "",
     category: "",
     stage: "",
     traction: "",
@@ -237,6 +238,21 @@ export default function SubmitPage() {
                 <p className="text-ink/40 text-[10px] mt-1">Supporters who commit as founding testers lock this in as Early Merit</p>
               </div>
             )}
+          </div>
+
+          {/* Demo image */}
+          <div className="space-y-4">
+            <h2 className="text-ink/70 text-xs font-bold uppercase tracking-wider">Product Demo Image</h2>
+            <div>
+              <label className="text-ink/50 text-xs font-semibold block mb-1.5">Demo image URL (screenshot of your product)</label>
+              <input
+                value={form.demoImageUrl}
+                onChange={(e) => update("demoImageUrl", e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"
+                placeholder="https://yoursite.com/screenshot.png"
+              />
+              <p className="text-ink/40 text-[10px] mt-1">Shown on your pitch page in place of the video while videos are off</p>
+            </div>
           </div>
 
           {/* Video Section */}

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import PitchCard from "./PitchCard";
 import CoffeeChatModal from "./CoffeeChatModal";
 import WaitlistModal from "./WaitlistModal";
@@ -45,6 +46,7 @@ const TABS: { key: TierKey; label: string }[] = [
 ];
 
 export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }) {
+  const router = useRouter();
   const [tier, setTier] = useState<TierKey>("launch");
   const [actionPitch, setActionPitch] = useState<Pitch | null>(null);
   const [focalIndex, setFocalIndex] = useState(0);
@@ -97,6 +99,29 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
     return () => cancelAnimationFrame(rafRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pitches]);
+
+  // Keyboard: ↑/↓ or j/k move between reels, L likes, C opens the pitch
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      const t = e.target as HTMLElement;
+      if (actionPitch || t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable) return;
+      if (e.key === "ArrowDown" || e.key === "j") {
+        e.preventDefault();
+        scrollToIndex(Math.min(pitches.length - 1, focalIndex + 1));
+      } else if (e.key === "ArrowUp" || e.key === "k") {
+        e.preventDefault();
+        scrollToIndex(Math.max(0, focalIndex - 1));
+      } else if (e.key === "l") {
+        document.querySelector<HTMLElement>('[data-focal="true"] [data-action="upvote"]')?.click();
+      } else if (e.key === "c") {
+        const p = pitches[focalIndex];
+        if (p) router.push(`/pitch/${p.id}`);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focalIndex, pitches, actionPitch]);
 
   const isInvestorAsk = actionPitch?.needType === "investors";
 
