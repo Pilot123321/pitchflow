@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 interface CoffeeChatModalProps {
   pitchId: string;
@@ -11,11 +12,20 @@ interface CoffeeChatModalProps {
 }
 
 export default function CoffeeChatModal({ pitchId, startupName, founderName, calendlyUrl, onClose }: CoffeeChatModalProps) {
+  const { data: session } = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+
+
+  useEffect(() => {
+    if (session?.user) {
+      setName((n) => n || session.user?.name || "");
+      setEmail((e) => e || session.user?.email || "");
+    }
+  }, [session]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -92,9 +102,15 @@ export default function CoffeeChatModal({ pitchId, startupName, founderName, cal
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"
+                  readOnly={!!session?.user?.email}
+                  className={`w-full px-4 py-3 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors ${
+                    session?.user?.email ? "opacity-70" : ""
+                  }`}
                   placeholder="jane@example.com"
                 />
+                {session?.user?.email && (
+                  <p className="text-moss text-[10px] font-semibold mt-1">✓ verified via Google</p>
+                )}
               </div>
               <div>
                 <label className="text-ink/60 text-xs font-semibold block mb-1.5">Message (optional)</label>

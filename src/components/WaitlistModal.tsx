@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import type { NeedType } from "@/lib/needs";
 import { MERIT_TIERS, type MeritTier } from "@/lib/merit";
 
@@ -93,6 +94,7 @@ export default function WaitlistModal({
   const isUsers = variant === "users";
   const copy = COPY[variant];
 
+  const { data: session } = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -101,6 +103,14 @@ export default function WaitlistModal({
   const [loading, setLoading] = useState(false);
   const [position, setPosition] = useState<number | null>(null);
   const [merit, setMerit] = useState<MeritResult | null>(null);
+
+
+  useEffect(() => {
+    if (session?.user) {
+      setName((n) => n || session.user?.name || "");
+      setEmail((e) => e || session.user?.email || "");
+    }
+  }, [session]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -227,9 +237,15 @@ export default function WaitlistModal({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"
+                  readOnly={!!session?.user?.email}
+                  className={`w-full px-4 py-3 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors ${
+                    session?.user?.email ? "opacity-70" : ""
+                  }`}
                   placeholder="jane@example.com"
                 />
+                {session?.user?.email && (
+                  <p className="text-moss text-[10px] font-semibold mt-1">✓ verified via Google</p>
+                )}
               </div>
               <div>
                 <label className="text-ink/60 text-xs font-semibold block mb-1.5">{copy.msgLabel}</label>
