@@ -213,21 +213,23 @@ export default function PitchCard({
         <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/25 to-transparent" />
       </div>
 
+      {/* Reel progress frame: spans the whole visible screen (below the
+          header, above the dock); the card and action stickers live
+          inside it. Fills clockwise as the reel plays. */}
+      <div className="absolute left-1.5 right-1.5 top-[7rem] bottom-[5.25rem] z-20 pointer-events-none" aria-hidden>
+        <svg className="reel-frame w-full h-full">
+          <rect className="reel-track" x="2" y="2" rx="18" pathLength={100}
+            style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
+            stroke="rgba(253, 247, 234, 0.2)" strokeWidth="3.5" />
+          <rect className="reel-progress" x="2" y="2" rx="18" pathLength={100}
+            style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
+            stroke="rgba(253, 247, 234, 0.95)" strokeWidth="3.5" strokeLinecap="round" />
+        </svg>
+      </div>
+
       {/* Scene zone: everything above the paper card lives here, so the
           play button and action rail can never collide with the card. */}
       <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center pt-24">
-        {/* Reel progress frame: wraps the visible reel exactly (below the
-            header, above the paper card) and fills clockwise as it plays */}
-        <div className="absolute left-1.5 right-1.5 top-[7rem] bottom-1.5 pointer-events-none" aria-hidden>
-          <svg className="reel-frame w-full h-full">
-            <rect className="reel-track" x="2" y="2" rx="18" pathLength={100}
-              style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
-              stroke="rgba(253, 247, 234, 0.2)" strokeWidth="3.5" />
-            <rect className="reel-progress" x="2" y="2" rx="18" pathLength={100}
-              style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
-              stroke="rgba(253, 247, 234, 0.95)" strokeWidth="3.5" strokeLinecap="round" />
-          </svg>
-        </div>
         {/* Idea tag: hand-placed sticker */}
         {isIdea && (
           <div className="absolute top-28 left-4 px-2.5 py-1 -rotate-2 rounded-md bg-cream text-ink border border-dashed border-ink/30 text-[10px] font-bold uppercase tracking-wider shadow reveal">
@@ -323,7 +325,7 @@ export default function PitchCard({
 
       {/* Bottom paper card. Name + tagline are always legible (the
           "label" zoom level); details cascade in when focal. */}
-      <div className="relative z-10 w-full px-4 pb-[5.5rem] swing-in-wrap feed-card-content">
+      <div className="relative z-10 w-full px-5 pb-24 swing-in-wrap feed-card-content">
         <div className="paper swing-in rounded-2xl px-4 py-3">
           <div className="flex items-center gap-2 mb-2 reveal reveal-1">
             <span className="px-2 py-0.5 rounded-md border border-dashed border-lagoon text-lagoon text-[11px] font-bold uppercase tracking-wide">{category}</span>
