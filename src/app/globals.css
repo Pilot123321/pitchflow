@@ -123,6 +123,13 @@ body {
     stroke-dashoffset: 0;
   }
 }
+/* With a real video, the border tracks actual playback (--played is
+   set from timeupdate) instead of the simulated duration */
+.reel-live .reel-frame .reel-progress {
+  animation: none;
+  stroke-dashoffset: calc(100 - var(--played, 0) * 100);
+  transition: stroke-dashoffset 0.35s linear;
+}
 
 /* Pointer-tracked spotlight on the card background */
 .feed-spotlight {

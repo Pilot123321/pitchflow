@@ -200,7 +200,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
               data-focal={i === focalIndex}
               className="h-screen w-full snap-start relative"
             >
-              <PitchCard {...pitch} onAction={() => setActionPitch(pitch)} />
+              <PitchCard {...pitch} isFocal={i === focalIndex} onAction={() => setActionPitch(pitch)} />
             </div>
           ))
         )}

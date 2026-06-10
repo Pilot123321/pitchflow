@@ -29,6 +29,7 @@ interface PitchCardProps {
   earlyPerk?: string;
   waitlistCount?: number;
   videoSeconds?: number;
+  isFocal?: boolean;
   onAction: (id: string) => void;
 }
 
@@ -48,6 +49,7 @@ export default function PitchCard({
   founderTitle,
   startupName,
   tagline,
+  videoUrl,
   category,
   stage,
   traction,
@@ -61,6 +63,7 @@ export default function PitchCard({
   needLabel,
   earlyPerk,
   videoSeconds,
+  isFocal,
   onAction,
 }: PitchCardProps) {
   const [upvotes, setUpvotes] = useState(initialUpvotes);
@@ -68,7 +71,44 @@ export default function PitchCard({
   const [isAnimating, setIsAnimating] = useState(false);
   const [burstKey, setBurstKey] = useState(0);
   const [shared, setShared] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const isVideo = !videoFailed && /\.(mp4|webm|mov)(\?|#|$)/i.test(videoUrl ?? "");
+
+  // The reel plays while focal, rewinds when scrolled away — matching
+  // how the progress border resets for gradient-only cards.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (isFocal) {
+      v.currentTime = 0;
+      v.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    } else {
+      v.pause();
+      setPlaying(false);
+      rootRef.current?.style.setProperty("--played", "0");
+    }
+  }, [isFocal, isVideo]);
+
+  function togglePlay() {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      v.play().then(() => setPlaying(true)).catch(() => {});
+    } else {
+      v.pause();
+      setPlaying(false);
+    }
+  }
+
+  function handleTimeUpdate() {
+    const v = videoRef.current;
+    if (!v || !v.duration) return;
+    rootRef.current?.style.setProperty("--played", (v.currentTime / v.duration).toFixed(4));
+  }
 
   // Upvotes survive refresh: hydrate from the local ledger
   useEffect(() => {
@@ -130,20 +170,40 @@ export default function PitchCard({
     }
     try {
       await navigator.clipboard.writeText(url);
-      setShared(true);
-      setTimeout(() => setShared(false), 1600);
-    } catch {}
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+    }
+    setShared(true);
+    setTimeout(() => setShared(false), 1600);
   }
 
   return (
     <div
       ref={rootRef}
       onPointerMove={handlePointerMove}
-      className="h-full w-full relative flex flex-col overflow-hidden"
+      className={`h-full w-full relative flex flex-col overflow-hidden ${isVideo ? "reel-live" : ""}`}
       style={{ "--reel-duration": `${videoSeconds ?? 45}s` } as CSSProperties}
     >
       {/* Background scenery (simulates video), parallax-linked to scroll */}
       <div className={`absolute inset-0 feed-card-bg bg-gradient-to-br ${scene}`}>
+        {isVideo && (
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            muted
+            loop
+            playsInline
+            preload={isFocal ? "auto" : "none"}
+            onTimeUpdate={handleTimeUpdate}
+            onError={() => setVideoFailed(true)}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
         <div className="absolute inset-0 bg-black/10" />
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
@@ -175,12 +235,25 @@ export default function PitchCard({
           </div>
         )}
 
-        {/* Play button: dead-center of the scene zone */}
-        <div className="breathe w-20 h-20 rounded-full bg-cream/15 backdrop-blur-sm flex items-center justify-center border-2 border-cream/40">
-          <svg className="w-8 h-8 text-cream ml-1" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M8 5v14l11-7z" />
-          </svg>
-        </div>
+        {/* Play button: dead-center of the scene zone; a real control
+            when the pitch has a video */}
+        <button
+          onClick={isVideo ? togglePlay : undefined}
+          aria-label={playing ? "Pause pitch video" : "Play pitch video"}
+          className={`breathe w-20 h-20 rounded-full bg-cream/15 backdrop-blur-sm flex items-center justify-center border-2 border-cream/40 transition-opacity duration-500 ${
+            playing ? "opacity-25 hover:opacity-90" : "opacity-100"
+          }`}
+        >
+          {playing ? (
+            <svg className="w-8 h-8 text-cream" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M7 5h4v14H7zM13 5h4v14h-4z" />
+            </svg>
+          ) : (
+            <svg className="w-8 h-8 text-cream ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          )}
+        </button>
 
         {/* Action stickers: vertically centered on the scene zone's right
             edge, mirroring the overview rail on the left */}

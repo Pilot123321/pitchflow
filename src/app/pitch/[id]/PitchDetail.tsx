@@ -341,10 +341,10 @@ export default function PitchDetail({ pitch }: { pitch: Pitch }) {
       </div>
 
       {/* Sticky contextual CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 bg-gradient-to-t from-cream via-cream to-transparent">
+      <div className="fixed bottom-0 left-0 right-0 z-40 px-5 pb-[5.25rem] pt-3 bg-gradient-to-t from-cream via-cream to-transparent pointer-events-none">
         <button
           onClick={() => setShowModal(true)}
-          className={`w-full py-4 rounded-full font-display font-semibold text-sm flex items-center justify-center gap-2 active:scale-[0.98] transition-all ${
+          className={`pointer-events-auto w-full py-4 rounded-full font-display font-semibold text-sm flex items-center justify-center gap-2 active:scale-[0.98] transition-all ${
             action.style === "grad"
               ? "bg-clay text-cream hover:bg-[#a34d0d]"
               : "bg-brick text-cream hover:bg-[#8f1f1f]"
