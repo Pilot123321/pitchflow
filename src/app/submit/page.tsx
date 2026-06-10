@@ -264,9 +264,9 @@ export default function SubmitPage() {
                 value={form.videoUrl}
                 onChange={(e) => update("videoUrl", e.target.value)}
                 className="w-full px-4 py-3 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"
-                placeholder="https://youtube.com/watch?v=..."
+                placeholder="YouTube Shorts or Instagram Reels URL"
               />
-              <p className="text-ink/40 text-[10px] mt-1">Record a 30-60 second vertical video pitching your startup</p>
+              <p className="text-ink/40 text-[10px] mt-1">Paste a YouTube Shorts or Instagram Reels link — it plays right in the feed</p>
             </div>
           </div>
 

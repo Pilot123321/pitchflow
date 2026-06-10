@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { ctaFor, type NeedType } from "@/lib/needs";
 import Sigil from "@/components/Sigil";
+import { videoSourceFor } from "@/lib/video";
 
 interface PitchCardProps {
   id: string;
@@ -90,12 +91,14 @@ export default function PitchCard({
     }
   }, [isFocal]);
 
-  // Placeholder clips (Big Buck Bunny) are deactivated for now — flip
-  // this on when pitches carry real founder videos. The reel border
-  // falls back to its simulated duration while off.
-  const VIDEOS_ENABLED = false;
+  // Direct-file placeholders (Big Buck Bunny) stay off until real
+  // founder files exist; YouTube Shorts / Instagram Reels URLs embed
+  // and play immediately.
+  const FILE_VIDEOS_ENABLED = false;
 
-  const isVideo = VIDEOS_ENABLED && !videoFailed && /\.(mp4|webm|mov)(\?|#|$)/i.test(videoUrl ?? "");
+  const source = videoSourceFor(videoUrl);
+  const isVideo = FILE_VIDEOS_ENABLED && !videoFailed && source?.kind === "file";
+  const isEmbed = source?.kind === "youtube" || source?.kind === "instagram";
 
   // The reel plays while focal, rewinds when scrolled away — matching
   // how the progress border resets for gradient-only cards.
@@ -281,6 +284,25 @@ export default function PitchCard({
         <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/25 to-transparent" />
       </div>
 
+      {/* Platform reel: YouTube Shorts / Instagram Reels embed, mounted
+          only while this reel is focal so exactly one player runs */}
+      {isEmbed && isFocal && (
+        <div className="absolute inset-0 z-[2]" aria-hidden={false}>
+          <iframe
+            src={source!.embedUrl}
+            title={`${startupName} pitch video`}
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            allow="autoplay; encrypted-media; picture-in-picture"
+            referrerPolicy="strict-origin-when-cross-origin"
+          />
+        </div>
+      )}
+      {isEmbed && (
+        <div className="absolute top-[8.1rem] right-5 z-20 paper rounded-full px-2.5 py-1 text-[10px] font-bold text-ink/80 pointer-events-none">
+          {source!.kind === "youtube" ? "▶ YouTube Shorts" : "◎ Instagram Reel"}
+        </div>
+      )}
+
       {/* Projector beam + dust motes falling from the film strip */}
       <div className="absolute inset-x-0 top-0 h-[55%] z-[5] pointer-events-none overflow-hidden" aria-hidden>
         <div className="beam absolute inset-0" />
@@ -324,6 +346,7 @@ export default function PitchCard({
 
         {/* Play button: dead-center of the scene zone; a real control
             when the pitch has a video */}
+        {!isEmbed && (
         <button
           onClick={isVideo ? togglePlay : undefined}
           aria-label={playing ? "Pause pitch video" : "Play pitch video"}
@@ -341,6 +364,7 @@ export default function PitchCard({
             </svg>
           )}
         </button>
+        )}
 
       </div>
 
