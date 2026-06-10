@@ -357,7 +357,7 @@ export default function PitchCard({
           onPointerMove={onReelMove}
           onPointerUp={onReelUp}
           onPointerCancel={onReelUp}
-          className={`absolute z-[2] ${frameGeom} left-1/2 -translate-x-1/2 aspect-[9/16] max-w-[calc(100%-8px)] [touch-action:pan-y]`}
+          className={`absolute z-[2] ${frameGeom} left-1 right-1 [touch-action:pan-y]`}
         >
           <div className="absolute inset-[2px] rounded-[16px] overflow-hidden bg-black/40">
             <iframe
@@ -406,11 +406,7 @@ export default function PitchCard({
           header, above the dock); the card and action stickers live
           inside it. Fills clockwise as the reel plays. */}
       <div
-        className={`absolute z-20 pointer-events-none ${frameGeom} ${
-          isEmbed
-            ? "left-1/2 -translate-x-1/2 aspect-[9/16] max-w-[calc(100%-8px)]"
-            : "left-1 right-1"
-        }`}
+        className={`absolute z-20 pointer-events-none ${frameGeom} left-1 right-1`}
         aria-hidden
       >
         <svg className="reel-frame w-full h-full">
