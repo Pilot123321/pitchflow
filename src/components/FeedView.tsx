@@ -9,7 +9,7 @@ import WaitlistModal from "./WaitlistModal";
 import type { NeedType } from "@/lib/needs";
 import { sceneFor } from "@/lib/scenes";
 import { paletteFor } from "@/lib/palette";
-import AuroraSky, { sky } from "@/components/AuroraSky";
+import { sky } from "@/components/AuroraSky";
 
 interface Pitch {
   id: string;
@@ -264,10 +264,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
         </nav>
       )}
 
-      {/* Live aurora sky: one WebGL pass behind every reel */}
-      <AuroraSky />
-
-      {/* Feed */}
+      {/* Feed (the aurora sky behind it is mounted once in the layout) */}
       <div
         ref={containerRef}
         onScroll={handleScroll}

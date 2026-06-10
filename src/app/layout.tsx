@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Fredoka } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Providers from "@/components/Providers";
+import SkyBackdrop from "@/components/SkyBackdrop";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-cream text-ink">
         <Providers>
+          <SkyBackdrop />
           {children}
           <Navbar />
         </Providers>
