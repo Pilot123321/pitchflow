@@ -131,6 +131,49 @@ export function recordMerit(entry: Omit<MeritEntry, "joinedAt">): MeritEntry {
   return full;
 }
 
+// --- Comments ---
+
+export interface Comment {
+  id: string;
+  pitchId: string;
+  name: string;
+  text: string;
+  createdAt: string;
+}
+
+const commentsPath = path.join(process.cwd(), "src/data/comments.json");
+
+export function getComments(pitchId: string): Comment[] {
+  try {
+    const all: Comment[] = JSON.parse(fs.readFileSync(commentsPath, "utf-8"));
+    return all.filter((c) => c.pitchId === pitchId);
+  } catch {
+    return [];
+  }
+}
+
+export function addComment(pitchId: string, name: string, text: string): Comment | null {
+  const pitches = getPitches();
+  const pitch = pitches.find((p) => p.id === pitchId);
+  if (!pitch) return null;
+  let all: Comment[] = [];
+  try {
+    all = JSON.parse(fs.readFileSync(commentsPath, "utf-8"));
+  } catch {}
+  const comment: Comment = {
+    id: String(Date.now()),
+    pitchId,
+    name,
+    text,
+    createdAt: new Date().toISOString(),
+  };
+  all.push(comment);
+  fs.writeFileSync(commentsPath, JSON.stringify(all, null, 2));
+  pitch.comments += 1;
+  fs.writeFileSync(dataPath, JSON.stringify(pitches, null, 2));
+  return comment;
+}
+
 export function upvotePitch(id: string): Pitch | null {
   const pitches = getPitches();
   const pitch = pitches.find((p) => p.id === id);

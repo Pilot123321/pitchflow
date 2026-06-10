@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import CoffeeChatModal from "@/components/CoffeeChatModal";
 import WaitlistModal from "@/components/WaitlistModal";
@@ -51,10 +51,56 @@ interface Pitch {
   updates?: ProgressUpdate[];
 }
 
+interface Comment {
+  id: string;
+  name: string;
+  text: string;
+  createdAt: string;
+}
+
 export default function PitchDetail({ pitch }: { pitch: Pitch }) {
   const [showModal, setShowModal] = useState(false);
   const [upvotes, setUpvotes] = useState(pitch.upvotes);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [commentCount, setCommentCount] = useState(pitch.comments);
+  const [commentName, setCommentName] = useState("");
+  const [commentText, setCommentText] = useState("");
+  const [posting, setPosting] = useState(false);
   const [hasUpvoted, setHasUpvoted] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (JSON.parse(localStorage.getItem("pf-upvoted") ?? "[]").includes(pitch.id)) setHasUpvoted(true);
+      setCommentName(localStorage.getItem("pf-name") ?? "");
+    } catch {}
+    fetch(`/api/comments?pitchId=${pitch.id}`)
+      .then((r) => r.json())
+      .then((data) => Array.isArray(data) && setComments(data.reverse()))
+      .catch(() => {});
+  }, [pitch.id]);
+
+  async function postComment(e: React.FormEvent) {
+    e.preventDefault();
+    if (!commentName.trim() || !commentText.trim() || posting) return;
+    setPosting(true);
+    try {
+      const res = await fetch("/api/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pitchId: pitch.id, name: commentName, text: commentText }),
+      });
+      if (res.ok) {
+        const saved = await res.json();
+        setComments((c) => [saved, ...c]);
+        setCommentCount((n) => n + 1);
+        setCommentText("");
+        try {
+          localStorage.setItem("pf-name", commentName.trim());
+        } catch {}
+      }
+    } catch {}
+    setPosting(false);
+  }
 
   const action = ctaFor(pitch.needType);
   const isInvestorAsk = pitch.needType === "investors";
@@ -64,6 +110,10 @@ export default function PitchDetail({ pitch }: { pitch: Pitch }) {
     if (hasUpvoted) return;
     setHasUpvoted(true);
     setUpvotes((v) => v + 1);
+    try {
+      const ids: string[] = JSON.parse(localStorage.getItem("pf-upvoted") ?? "[]");
+      localStorage.setItem("pf-upvoted", JSON.stringify([...new Set([...ids, pitch.id])]));
+    } catch {}
     await fetch("/api/upvote", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -126,7 +176,7 @@ export default function PitchDetail({ pitch }: { pitch: Pitch }) {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <span className="text-sm font-medium">{pitch.comments}</span>
+            <span className="text-sm font-medium">{commentCount}</span>
           </div>
           <span className="text-ink/40 text-xs ml-auto">{fmtDate(pitch.createdAt)}</span>
         </div>
@@ -218,6 +268,57 @@ export default function PitchDetail({ pitch }: { pitch: Pitch }) {
           </div>
         )}
 
+        {/* Comments */}
+        <div className="mb-6">
+          <h3 className="text-ink/50 text-[11px] font-bold uppercase tracking-wider mb-3">
+            Comments ({commentCount})
+          </h3>
+          <form onSubmit={postComment} className="space-y-2 mb-4">
+            <input
+              value={commentName}
+              onChange={(e) => setCommentName(e.target.value)}
+              placeholder="Your name"
+              required
+              className="w-full px-4 py-2.5 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"
+            />
+            <div className="flex gap-2">
+              <input
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="Ask the founder anything…"
+                required
+                maxLength={500}
+                className="flex-1 px-4 py-2.5 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"
+              />
+              <button
+                type="submit"
+                disabled={posting}
+                className="px-5 py-2.5 rounded-full bg-brick text-cream font-display font-semibold text-sm disabled:opacity-50"
+              >
+                {posting ? "…" : "Post"}
+              </button>
+            </div>
+          </form>
+          {comments.length === 0 ? (
+            <p className="text-ink/40 text-sm">No comments yet — start the conversation.</p>
+          ) : (
+            <div className="space-y-3">
+              {comments.map((c) => (
+                <div key={c.id} className="rounded-xl border border-dashed border-ink/15 bg-ink/[0.02] px-4 py-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-6 h-6 rounded-full bg-cream border border-ink/15 flex items-center justify-center text-ink text-[9px] font-bold">
+                      {c.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
+                    </div>
+                    <span className="text-ink text-xs font-semibold">{c.name}</span>
+                    <span className="text-ink/35 text-[10px] ml-auto">{fmtDate(c.createdAt)}</span>
+                  </div>
+                  <p className="text-ink/75 text-sm leading-relaxed">{c.text}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* Links */}
         <div className="flex gap-3 mb-6">
           {pitch.websiteUrl && (
@@ -258,6 +359,7 @@ export default function PitchDetail({ pitch }: { pitch: Pitch }) {
           pitchId={pitch.id}
           startupName={pitch.startupName}
           founderName={pitch.founderName}
+          calendlyUrl={pitch.calendlyUrl}
           onClose={() => setShowModal(false)}
         />
       )}

@@ -212,6 +212,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
           pitchId={actionPitch.id}
           startupName={actionPitch.startupName}
           founderName={actionPitch.founderName}
+          calendlyUrl={actionPitch.calendlyUrl}
           onClose={() => setActionPitch(null)}
         />
       )}

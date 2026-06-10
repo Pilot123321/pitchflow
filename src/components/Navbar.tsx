@@ -48,7 +48,7 @@ export default function Navbar() {
       ),
     },
     {
-      href: "#",
+      href: "/profile",
       label: "Profile",
       icon: (active: boolean) => (
         <svg className="w-6 h-6" fill={active ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">

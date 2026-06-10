@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { ctaFor, type NeedType } from "@/lib/needs";
 import { sceneFor } from "@/lib/scenes";
@@ -67,7 +67,15 @@ export default function PitchCard({
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [burstKey, setBurstKey] = useState(0);
+  const [shared, setShared] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+
+  // Upvotes survive refresh: hydrate from the local ledger
+  useEffect(() => {
+    try {
+      if (JSON.parse(localStorage.getItem("pf-upvoted") ?? "[]").includes(id)) setHasUpvoted(true);
+    } catch {}
+  }, [id]);
 
   const action = ctaFor(needType);
   const isIdea = tier === "idea";
@@ -90,6 +98,7 @@ export default function PitchCard({
     setHasUpvoted(true);
     setUpvotes((v) => v + 1);
     setBurstKey(Date.now());
+    rememberUpvote(true);
     try {
       await fetch("/api/upvote", {
         method: "POST",
@@ -99,8 +108,31 @@ export default function PitchCard({
     } catch {
       setUpvotes((v) => v - 1);
       setHasUpvoted(false);
+      rememberUpvote(false);
     }
     setTimeout(() => setIsAnimating(false), 600);
+  }
+
+  function rememberUpvote(add: boolean) {
+    try {
+      const ids: string[] = JSON.parse(localStorage.getItem("pf-upvoted") ?? "[]");
+      const next = add ? [...new Set([...ids, id])] : ids.filter((x) => x !== id);
+      localStorage.setItem("pf-upvoted", JSON.stringify(next));
+    } catch {}
+  }
+
+  async function handleShare() {
+    const url = `${window.location.origin}/pitch/${id}`;
+    const payload = { title: `${startupName} on PitchFlow`, text: tagline, url };
+    if (navigator.share) {
+      try { await navigator.share(payload); } catch {}
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setShared(true);
+      setTimeout(() => setShared(false), 1600);
+    } catch {}
   }
 
   return (
@@ -197,13 +229,21 @@ export default function PitchCard({
           <span className="text-cream text-xs font-bold drop-shadow">{comments}</span>
         </Link>
 
-        <button className="flex flex-col items-center gap-1 group">
-          <div className="w-12 h-12 rounded-full bg-cream/90 text-ink shadow-md flex items-center justify-center group-hover:bg-cream transition-all">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-            </svg>
+        <button onClick={handleShare} className="flex flex-col items-center gap-1 group">
+          <div className={`w-12 h-12 rounded-full shadow-md flex items-center justify-center transition-all ${
+            shared ? "bg-moss text-cream" : "bg-cream/90 text-ink group-hover:bg-cream"
+          }`}>
+            {shared ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+              </svg>
+            )}
           </div>
-          <span className="text-cream text-xs font-bold drop-shadow">Share</span>
+          <span className="text-cream text-xs font-bold drop-shadow">{shared ? "Copied!" : "Share"}</span>
         </button>
         </div>
       </div>

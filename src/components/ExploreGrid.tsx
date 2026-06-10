@@ -14,7 +14,15 @@ interface Pitch {
   stage: string;
   traction: string;
   upvotes: number;
+  chatRequests: number;
+  createdAt: string;
   gradient: string;
+  waitlistCount?: number;
+}
+
+// Trending = engagement across every conversion surface, not just hearts
+function trendingScore(p: Pitch) {
+  return p.upvotes + 3 * (p.chatRequests ?? 0) + 0.15 * (p.waitlistCount ?? 0);
 }
 
 const categories = ["All", "AI/ML", "Fintech", "Healthcare", "Climate", "DevTools", "Consumer", "EdTech", "Logistics", "SaaS"];
@@ -23,14 +31,24 @@ const stages = ["All Stages", "Idea", "Pre-seed", "Seed", "Series A"];
 export default function ExploreGrid({ pitches }: { pitches: Pitch[] }) {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedStage, setSelectedStage] = useState("All Stages");
+  const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<"trending" | "newest" | "most-upvoted">("trending");
 
+  const q = search.trim().toLowerCase();
   const filtered = pitches
     .filter((p) => selectedCategory === "All" || p.category === selectedCategory)
     .filter((p) => selectedStage === "All Stages" || p.stage === selectedStage)
+    .filter(
+      (p) =>
+        !q ||
+        [p.startupName, p.tagline, p.founderName, p.category].some((f) =>
+          f.toLowerCase().includes(q)
+        )
+    )
     .sort((a, b) => {
       if (sortBy === "most-upvoted") return b.upvotes - a.upvotes;
-      return 0;
+      if (sortBy === "newest") return Date.parse(b.createdAt) - Date.parse(a.createdAt);
+      return trendingScore(b) - trendingScore(a);
     });
 
   return (
@@ -48,6 +66,8 @@ export default function ExploreGrid({ pitches }: { pitches: Pitch[] }) {
         </svg>
         <input
           type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
           placeholder="Search startups, founders, categories..."
           className="w-full pl-10 pr-4 py-3 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"
         />

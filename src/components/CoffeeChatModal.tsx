@@ -6,10 +6,11 @@ interface CoffeeChatModalProps {
   pitchId: string;
   startupName: string;
   founderName: string;
+  calendlyUrl?: string;
   onClose: () => void;
 }
 
-export default function CoffeeChatModal({ pitchId, startupName, founderName, onClose }: CoffeeChatModalProps) {
+export default function CoffeeChatModal({ pitchId, startupName, founderName, calendlyUrl, onClose }: CoffeeChatModalProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -43,9 +44,21 @@ export default function CoffeeChatModal({ pitchId, startupName, founderName, onC
             <p className="text-ink/60 text-sm mb-6">
               {founderName} will receive your coffee chat request. You&apos;ll hear back via email if they&apos;re interested.
             </p>
-            <button onClick={onClose} className="px-8 py-3 rounded-full bg-ink text-cream font-display font-semibold text-sm">
-              Done
-            </button>
+            <div className="flex items-center justify-center gap-3">
+              {calendlyUrl && (
+                <a
+                  href={calendlyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 rounded-full bg-clay text-cream font-display font-semibold text-sm hover:bg-[#a34d0d] transition-colors"
+                >
+                  ☕ Book a time now
+                </a>
+              )}
+              <button onClick={onClose} className="px-6 py-3 rounded-full bg-ink text-cream font-display font-semibold text-sm">
+                Done
+              </button>
+            </div>
           </div>
         ) : (
           <>
