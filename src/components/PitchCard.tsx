@@ -321,9 +321,11 @@ export default function PitchCard({
           )}
         </button>
 
-        {/* Action stickers: vertically centered on the scene zone's right
-            edge, mirroring the overview rail on the left */}
-        <div className="absolute right-5 bottom-3 sticker-rail flex flex-col items-center gap-3.5 feed-card-content">
+      </div>
+
+      {/* Action stickers: a fixed vertical column in its own lane to
+          the right of the card, anchored above the frame's bottom edge */}
+      <div className="absolute right-4 bottom-[6.25rem] z-20 sticker-rail flex flex-col items-center gap-3.5 feed-card-content">
         <Link href={`/pitch/${id}`} className="flex flex-col items-center">
           <div className="w-10 h-10 rounded-full bg-cream flex items-center justify-center text-ink font-bold text-xs border-2 border-ink/10 shadow-md">
             {founderName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
@@ -384,12 +386,11 @@ export default function PitchCard({
           </div>
           <span className="text-cream text-xs font-bold drop-shadow">{shared ? "Copied!" : "Share"}</span>
         </button>
-        </div>
       </div>
 
       {/* Bottom paper card. Name + tagline are always legible (the
           "label" zoom level); details cascade in when focal. */}
-      <div className="relative z-10 w-full px-5 pb-24 swing-in-wrap feed-card-content">
+      <div className="relative z-10 w-full pl-5 pr-[4.5rem] pb-24 swing-in-wrap feed-card-content">
         {dismissed ? (
           <button
             onClick={() => setDismissed(false)}
