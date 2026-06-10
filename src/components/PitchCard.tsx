@@ -296,7 +296,7 @@ export default function PitchCard({
       <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center pt-24">
         {/* Idea tag: hand-placed sticker */}
         {isIdea && (
-          <div className="absolute top-28 left-4 px-2.5 py-1 -rotate-2 rounded-md bg-cream text-ink border border-dashed border-ink/30 text-[10px] font-bold uppercase tracking-wider shadow reveal">
+          <div className="absolute top-[8.5rem] left-5 px-2.5 py-1 -rotate-2 rounded-md bg-cream text-ink border border-dashed border-ink/30 text-[10px] font-bold uppercase tracking-wider shadow reveal">
             💡 Idea · validating
           </div>
         )}
