@@ -110,7 +110,6 @@ export default function PitchCard({
   // Instagram-style touch on the reel: quick tap toggles sound, a
   // sustained 1s+ hold pauses, release resumes. Vertical drags pass
   // through to the feed (touch-action: pan-y + movement guard).
-  const [flash, setFlash] = useState<"on" | "off" | null>(null);
   const holdRef = useRef<{ t: ReturnType<typeof setTimeout> | null; held: boolean; x: number; y: number; id: number }>(
     { t: null, held: false, x: 0, y: 0, id: -1 }
   );
@@ -148,10 +147,7 @@ export default function PitchCard({
       ytCommand("playVideo");
       videoRef.current?.play().catch(() => {});
     } else if (h.t !== null) {
-      const next = !soundOn;
       onToggleSound?.();
-      setFlash(next ? "on" : "off");
-      setTimeout(() => setFlash(null), 700);
     }
     h.t = null;
   }
@@ -370,13 +366,6 @@ export default function PitchCard({
               referrerPolicy="strict-origin-when-cross-origin"
             />
           </div>
-          {flash && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="count-pop w-16 h-16 rounded-full bg-black/55 backdrop-blur-sm flex items-center justify-center text-3xl">
-                {flash === "on" ? "🔊" : "🔇"}
-              </div>
-            </div>
-          )}
         </div>
       )}
       {isEmbed && (
