@@ -351,7 +351,7 @@ export default function PitchCard({
       {/* Reel progress frame: spans the whole visible screen (below the
           header, above the dock); the card and action stickers live
           inside it. Fills clockwise as the reel plays. */}
-      <div className="absolute left-1.5 right-1.5 top-[7.25rem] bottom-[5.25rem] z-20 pointer-events-none" aria-hidden>
+      <div className="absolute left-1 right-1 top-[6.75rem] bottom-[5.25rem] z-20 pointer-events-none" aria-hidden>
         <svg className="reel-frame w-full h-full">
           <rect className="reel-track" x="2" y="2" rx="18" pathLength={100}
             style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
