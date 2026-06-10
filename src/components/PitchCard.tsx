@@ -209,7 +209,7 @@ export default function PitchCard({
 
       {/* Bottom paper card. Name + tagline are always legible (the
           "label" zoom level); details cascade in when focal. */}
-      <div className="relative z-10 w-full px-4 pb-[4.25rem] swing-in-wrap feed-card-content">
+      <div className="relative z-10 w-full px-4 pb-[5.5rem] swing-in-wrap feed-card-content">
         <div className="paper swing-in rounded-2xl px-4 py-3">
           <div className="flex items-center gap-2 mb-2 reveal reveal-1">
             <span className="px-2 py-0.5 rounded-md border border-dashed border-lagoon text-lagoon text-[11px] font-bold uppercase tracking-wide">{category}</span>

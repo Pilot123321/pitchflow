@@ -59,8 +59,8 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 paper border-t-2 border-dashed border-ink/10">
-      <div className="max-w-lg mx-auto flex items-center justify-around py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+    <nav className="fixed bottom-[max(0.5rem,env(safe-area-inset-bottom))] left-3 right-3 z-50 paper rounded-2xl border border-ink/15 shadow-[0_-6px_24px_rgba(46,26,5,0.18),0_14px_30px_rgba(46,26,5,0.4)]">
+      <div className="max-w-lg mx-auto flex items-center justify-around py-2">
         {tabs.map((tab) => {
           const isActive = pathname === tab.href;
           return (
