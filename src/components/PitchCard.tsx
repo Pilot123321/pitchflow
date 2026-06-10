@@ -90,7 +90,12 @@ export default function PitchCard({
     }
   }, [isFocal]);
 
-  const isVideo = !videoFailed && /\.(mp4|webm|mov)(\?|#|$)/i.test(videoUrl ?? "");
+  // Placeholder clips (Big Buck Bunny) are deactivated for now — flip
+  // this on when pitches carry real founder videos. The reel border
+  // falls back to its simulated duration while off.
+  const VIDEOS_ENABLED = false;
+
+  const isVideo = VIDEOS_ENABLED && !videoFailed && /\.(mp4|webm|mov)(\?|#|$)/i.test(videoUrl ?? "");
 
   // The reel plays while focal, rewinds when scrolled away — matching
   // how the progress border resets for gradient-only cards.
