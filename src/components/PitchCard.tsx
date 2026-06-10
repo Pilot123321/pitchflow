@@ -123,6 +123,7 @@ export default function PitchCard({
   const FILE_VIDEOS_ENABLED = false;
 
   const source = videoSourceFor(videoUrl);
+  const frameGeom = "top-[6.75rem] bottom-[5.25rem]";
   const isVideo = FILE_VIDEOS_ENABLED && !videoFailed && source?.kind === "file";
   const isEmbed = source?.kind === "youtube" || source?.kind === "instagram";
 
@@ -310,19 +311,23 @@ export default function PitchCard({
         <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/25 to-transparent" />
       </div>
 
-      {/* Platform reel: YouTube Shorts / Instagram Reels embed, mounted
-          only while this reel is focal so exactly one player runs */}
+      {/* Platform reel: a 9:16 plate centered in the frame, video
+          clipped to the border's rounded rect, one player at a time */}
       {isEmbed && isFocal && (
-        <div className="absolute inset-0 z-[2]" aria-hidden={false}>
-          <iframe
-            ref={iframeRef}
-            onLoad={() => setTimeout(applySound, 400)}
-            src={source!.embedUrl}
-            title={`${startupName} pitch video`}
-            className="absolute inset-0 w-full h-full pointer-events-none"
-            allow="autoplay; encrypted-media; picture-in-picture"
-            referrerPolicy="strict-origin-when-cross-origin"
-          />
+        <div
+          className={`absolute z-[2] ${frameGeom} left-1/2 -translate-x-1/2 aspect-[9/16] max-w-[calc(100%-8px)]`}
+        >
+          <div className="absolute inset-[2px] rounded-[16px] overflow-hidden bg-black/40">
+            <iframe
+              ref={iframeRef}
+              onLoad={() => setTimeout(applySound, 400)}
+              src={source!.embedUrl}
+              title={`${startupName} pitch video`}
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              allow="autoplay; encrypted-media; picture-in-picture"
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
+          </div>
         </div>
       )}
       {isEmbed && (
@@ -351,7 +356,14 @@ export default function PitchCard({
       {/* Reel progress frame: spans the whole visible screen (below the
           header, above the dock); the card and action stickers live
           inside it. Fills clockwise as the reel plays. */}
-      <div className="absolute left-1 right-1 top-[6.75rem] bottom-[5.25rem] z-20 pointer-events-none" aria-hidden>
+      <div
+        className={`absolute z-20 pointer-events-none ${frameGeom} ${
+          isEmbed
+            ? "left-1/2 -translate-x-1/2 aspect-[9/16] max-w-[calc(100%-8px)]"
+            : "left-1 right-1"
+        }`}
+        aria-hidden
+      >
         <svg className="reel-frame w-full h-full">
           <rect className="reel-track" x="2" y="2" rx="18" pathLength={100}
             style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
