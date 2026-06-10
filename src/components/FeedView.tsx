@@ -144,7 +144,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
       {pitches.length > 1 && (
         <nav
           aria-label="Pitch overview"
-          className="fixed left-2 top-1/2 -translate-y-1/2 z-40 flex flex-col items-start gap-2.5"
+          className="fixed left-4 top-[36%] -translate-y-1/2 z-40 flex flex-col items-start gap-2.5"
         >
           {pitches.map((p, i) => {
             const isFocal = i === focalIndex;

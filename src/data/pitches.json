@@ -1,5 +1,43 @@
 [
   {
+    "founderName": "ign",
+    "founderTitle": "Builder",
+    "founderAvatar": "I",
+    "startupName": "ign",
+    "tagline": "Skibidi toilet video game",
+    "description": "Skibidi toilet video game — designed to make this effortless, fast, and genuinely delightful from the very first use.",
+    "videoUrl": "",
+    "category": "Consumer",
+    "stage": "Idea",
+    "traction": "Just posted",
+    "location": "ign",
+    "askAmount": "",
+    "calendlyUrl": "https://calendly.com",
+    "linkedinUrl": "",
+    "websiteUrl": "",
+    "gradient": "from-lime-600 to-green-800",
+    "tier": "idea",
+    "needType": "users",
+    "needLabel": "Validating the idea",
+    "needText": "Looking for 30 early users to try this for a week and tell me if it actually helps. Join the waitlist to be one of them.",
+    "watchRate": "idea-stage",
+    "problem": "Today, people handle \"skibidi toilet video game\" through clunky, manual workarounds that don't scale and waste their time.",
+    "solution": "Skibidi toilet video game — designed to make this effortless, fast, and genuinely delightful from the very first use.",
+    "team": [],
+    "updates": [
+      {
+        "date": "2026-06-10T07:15:37.649Z",
+        "text": "Brainstormed and posted to Ideas today."
+      }
+    ],
+    "id": "1781075737663",
+    "upvotes": 0,
+    "comments": 0,
+    "chatRequests": 0,
+    "waitlistCount": 0,
+    "createdAt": "2026-06-10T07:15:37.663Z"
+  },
+  {
     "id": "1",
     "founderName": "Sarah Chen",
     "founderTitle": "CEO & Co-founder",
@@ -456,7 +494,7 @@
     "traction": "310 waitlist signups",
     "location": "Remote",
     "askAmount": "",
-    "upvotes": 41,
+    "upvotes": 42,
     "comments": 6,
     "chatRequests": 0,
     "calendlyUrl": "https://calendly.com",

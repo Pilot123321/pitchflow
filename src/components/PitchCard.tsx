@@ -120,21 +120,21 @@ export default function PitchCard({
         <div className="absolute inset-0 feed-spotlight" />
       </div>
 
-      {/* Reel progress frame: fills clockwise while the reel "plays" */}
-      <div className="absolute left-1.5 right-1.5 top-[6.25rem] bottom-[4.25rem] z-20 pointer-events-none" aria-hidden>
-        <svg className="reel-frame w-full h-full">
-          <rect className="reel-track" x="2" y="2" rx="18" pathLength={100}
-            style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
-            stroke="rgba(253, 247, 234, 0.2)" strokeWidth="3.5" />
-          <rect className="reel-progress" x="2" y="2" rx="18" pathLength={100}
-            style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
-            stroke="rgba(253, 247, 234, 0.95)" strokeWidth="3.5" strokeLinecap="round" />
-        </svg>
-      </div>
-
       {/* Scene zone: everything above the paper card lives here, so the
           play button and action rail can never collide with the card. */}
       <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center pt-24">
+        {/* Reel progress frame: wraps the visible reel exactly (below the
+            header, above the paper card) and fills clockwise as it plays */}
+        <div className="absolute left-1.5 right-1.5 top-[6.25rem] bottom-1.5 pointer-events-none" aria-hidden>
+          <svg className="reel-frame w-full h-full">
+            <rect className="reel-track" x="2" y="2" rx="18" pathLength={100}
+              style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
+              stroke="rgba(253, 247, 234, 0.2)" strokeWidth="3.5" />
+            <rect className="reel-progress" x="2" y="2" rx="18" pathLength={100}
+              style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
+              stroke="rgba(253, 247, 234, 0.95)" strokeWidth="3.5" strokeLinecap="round" />
+          </svg>
+        </div>
         {/* Idea tag: hand-placed sticker */}
         {isIdea && (
           <div className="absolute top-28 left-4 px-2.5 py-1 -rotate-2 rounded-md bg-cream text-ink border border-dashed border-ink/30 text-[10px] font-bold uppercase tracking-wider shadow reveal">
@@ -209,9 +209,9 @@ export default function PitchCard({
 
       {/* Bottom paper card. Name + tagline are always legible (the
           "label" zoom level); details cascade in when focal. */}
-      <div className="relative z-10 w-full px-4 pb-[4.5rem] swing-in-wrap feed-card-content">
-        <div className="paper swing-in rounded-2xl p-4">
-          <div className="flex items-center gap-2 mb-3 reveal reveal-1">
+      <div className="relative z-10 w-full px-4 pb-[4.25rem] swing-in-wrap feed-card-content">
+        <div className="paper swing-in rounded-2xl px-4 py-3">
+          <div className="flex items-center gap-2 mb-2 reveal reveal-1">
             <span className="px-2 py-0.5 rounded-md border border-dashed border-lagoon text-lagoon text-[11px] font-bold uppercase tracking-wide">{category}</span>
             <span className="px-2 py-0.5 rounded-md border border-dashed border-moss text-moss text-[11px] font-bold uppercase tracking-wide">{stage}</span>
             {askAmount && (
@@ -222,9 +222,9 @@ export default function PitchCard({
           <Link href={`/pitch/${id}`}>
             <h2 className="font-display text-ink text-2xl font-semibold mb-0.5">{startupName}</h2>
           </Link>
-          <p className="text-ink/80 text-sm mb-3">{tagline}</p>
+          <p className="text-ink/80 text-sm mb-2">{tagline}</p>
 
-          <div className="flex items-center gap-2 mb-2.5 reveal reveal-2">
+          <div className="flex items-center gap-2 mb-2 reveal reveal-2">
             <span className="text-ink/60 text-xs">@{founderName.toLowerCase().replace(/\s/g, "")} &middot; {founderTitle}</span>
           </div>
 
@@ -247,7 +247,7 @@ export default function PitchCard({
 
           {/* Early merit perk: what beta testers earn for committing now */}
           {earlyPerk && (
-            <div className="mt-3.5 reveal reveal-4">
+            <div className="mt-2.5 reveal reveal-4">
               <span className="ticket inline-flex items-center gap-1.5 px-3.5 py-1 text-clay text-[11px] font-bold uppercase tracking-wide">
                 🎟 Early perk · {earlyPerk}
               </span>
@@ -261,7 +261,7 @@ export default function PitchCard({
           <div className="reveal reveal-5">
             <button
               onClick={() => onAction(id)}
-              className={`mt-1 w-full py-3 rounded-full font-display font-semibold text-sm flex items-center justify-center gap-2 shadow-md active:scale-[0.98] transition-all ${
+              className={`mt-1 w-full py-2.5 rounded-full font-display font-semibold text-sm flex items-center justify-center gap-2 shadow-md active:scale-[0.98] transition-all ${
                 action.style === "grad"
                   ? "bg-clay text-cream hover:bg-[#a34d0d]"
                   : "bg-brick text-cream hover:bg-[#8f1f1f]"
