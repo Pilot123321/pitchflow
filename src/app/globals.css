@@ -218,6 +218,17 @@ body {
 .sticker-rail {
   perspective: 600px;
 }
+
+/* Short windows: a 4-sticker column can't fit between the header and
+   the card, so the rail lies down as a row just above the card —
+   still inside the reel frame */
+@media (max-height: 820px) {
+  .sticker-rail {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 0.875rem;
+  }
+}
 .sticker-rail a > div,
 .sticker-rail button > div {
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
