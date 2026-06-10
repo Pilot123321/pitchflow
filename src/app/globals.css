@@ -315,20 +315,19 @@ body {
     radial-gradient(circle 4px at 100% 50%, transparent 98%, black) right / 51% 100% no-repeat;
 }
 
-/* Scalloped paper edge: the header hangs over the scene like a torn
-   sheet. --bend (set per-frame from feed scroll, 0 when snapped, 1
-   mid-transition) hinges the flap up in 3D as reels rush past, and
-   its drop shadow deepens the further it lifts. */
-.paper-torn {
-  background-color: #fdf7ea;
-  background-image: radial-gradient(rgba(67, 41, 15, 0.05) 1px, transparent 0);
-  background-size: 7px 7px;
-  -webkit-mask: radial-gradient(circle 7px at 7px 0, black 98%, transparent) 0 0 / 14px 100% repeat-x;
-  mask: radial-gradient(circle 7px at 7px 0, black 98%, transparent) 0 0 / 14px 100% repeat-x;
-  transform-origin: 50% 0%;
-  transform: perspective(700px) rotateX(calc(var(--bend, 0) * 48deg));
-  filter: drop-shadow(0 calc(var(--bend, 0) * 10px + 2px) calc(var(--bend, 0) * 10px + 3px) rgba(46, 26, 5, 0.35));
-  will-change: transform, filter;
+/* Film-strip edge: the header feeds the feed like film through a
+   projector. Sprocket holes are punched clean through (the scene
+   shows in the gaps), the strip is shaded like film curving over a
+   roller, and --film (set per-frame from feed scroll) advances the
+   perforations sideways as reels are pulled past. */
+.film-edge {
+  background: linear-gradient(180deg, #5a3a1c 0%, #43290f 40%, #2a1804 100%);
+  -webkit-mask: radial-gradient(ellipse 4.5px 3.5px at 8px 50%, transparent 97%, black)
+    var(--film, 0px) 50% / 16px 100% repeat-x;
+  mask: radial-gradient(ellipse 4.5px 3.5px at 8px 50%, transparent 97%, black)
+    var(--film, 0px) 50% / 16px 100% repeat-x;
+  filter: drop-shadow(0 4px 9px rgba(46, 26, 5, 0.4));
+  will-change: mask-position;
 }
 
 /* Nav tabs pop toward the viewer and emphasize on hover */
@@ -362,9 +361,9 @@ body {
   .dock-tab:hover {
     transform: none;
   }
-  .paper-torn {
-    transform: none;
-    filter: none;
+  .film-edge {
+    mask-position: 0 50%;
+    -webkit-mask-position: 0 50%;
   }
   .swipe-card {
     transition: none;

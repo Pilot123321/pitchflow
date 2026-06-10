@@ -72,10 +72,8 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
       card.style.setProperty("--offset", String(Math.max(-1, Math.min(1, d))));
       card.style.setProperty("--focus", String(Math.max(0, 1 - Math.abs(d))));
     });
-    // Header flap: flat when snapped on a reel, fully bent mid-flick
-    const frac = pos - Math.floor(pos);
-    const bend = Math.sin(Math.PI * Math.min(1, Math.max(0, frac)));
-    headerRef.current?.style.setProperty("--bend", bend.toFixed(3));
+    // Film advance: one reel of scroll pulls four sprocket holes past
+    headerRef.current?.style.setProperty("--film", `${(pos * 64).toFixed(1)}px`);
     const focal = Math.min(pitches.length - 1, Math.max(0, Math.round(pos)));
     setFocalIndex((f) => (f === focal ? f : focal));
   }
@@ -142,7 +140,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
             </button>
           ))}
         </div>
-        <div className="absolute left-0 right-0 top-full h-2.5 paper-torn" aria-hidden />
+        <div className="absolute left-0 right-0 top-full h-3.5 film-edge" aria-hidden />
       </div>
 
       {/* Overview+detail rail: a minimap of the feed. The focal dot
