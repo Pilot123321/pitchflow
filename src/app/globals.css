@@ -280,13 +280,27 @@ body {
 }
 
 /* Scalloped paper edge: the header hangs over the scene like a torn
-   sheet instead of ending in a hard line */
+   sheet. --bend (set per-frame from feed scroll, 0 when snapped, 1
+   mid-transition) hinges the flap up in 3D as reels rush past, and
+   its drop shadow deepens the further it lifts. */
 .paper-torn {
   background-color: #fdf7ea;
   background-image: radial-gradient(rgba(67, 41, 15, 0.05) 1px, transparent 0);
   background-size: 7px 7px;
   -webkit-mask: radial-gradient(circle 7px at 7px 0, black 98%, transparent) 0 0 / 14px 100% repeat-x;
   mask: radial-gradient(circle 7px at 7px 0, black 98%, transparent) 0 0 / 14px 100% repeat-x;
+  transform-origin: 50% 0%;
+  transform: perspective(700px) rotateX(calc(var(--bend, 0) * 48deg));
+  filter: drop-shadow(0 calc(var(--bend, 0) * 10px + 2px) calc(var(--bend, 0) * 10px + 3px) rgba(46, 26, 5, 0.35));
+  will-change: transform, filter;
+}
+
+/* Nav tabs pop toward the viewer and emphasize on hover */
+.dock-tab {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dock-tab:hover {
+  transform: translateY(-4px) scale(1.12);
 }
 
 /* Accessibility: collapse all motion to plain visibility */
@@ -308,8 +322,13 @@ body {
     animation: none;
   }
   .sticker-rail a:hover > div,
-  .sticker-rail button:hover > div {
+  .sticker-rail button:hover > div,
+  .dock-tab:hover {
     transform: none;
+  }
+  .paper-torn {
+    transform: none;
+    filter: none;
   }
   .burst-particle {
     display: none;

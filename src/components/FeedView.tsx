@@ -50,6 +50,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
   const [focalIndex, setFocalIndex] = useState(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const rafRef = useRef(0);
 
@@ -71,6 +72,10 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
       card.style.setProperty("--offset", String(Math.max(-1, Math.min(1, d))));
       card.style.setProperty("--focus", String(Math.max(0, 1 - Math.abs(d))));
     });
+    // Header flap: flat when snapped on a reel, fully bent mid-flick
+    const frac = pos - Math.floor(pos);
+    const bend = Math.sin(Math.PI * Math.min(1, Math.max(0, frac)));
+    headerRef.current?.style.setProperty("--bend", bend.toFixed(3));
     const focal = Math.min(pitches.length - 1, Math.max(0, Math.round(pos)));
     setFocalIndex((f) => (f === focal ? f : focal));
   }
@@ -100,7 +105,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
   return (
     <>
       {/* Header: cream paper bar, Hack the North style */}
-      <div className="fixed top-0 left-0 right-0 z-40 pt-[env(safe-area-inset-top)] paper">
+      <div ref={headerRef} className="fixed top-0 left-0 right-0 z-40 pt-[env(safe-area-inset-top)] paper">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2.5">
             <h1 className="font-display text-ink text-xl font-semibold tracking-tight">

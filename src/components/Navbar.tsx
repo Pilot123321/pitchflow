@@ -67,8 +67,8 @@ export default function Navbar() {
             <Link
               key={tab.label}
               href={tab.href}
-              className={`flex flex-col items-center gap-0.5 px-3 py-1 transition-colors ${
-                tab.special ? "" : isActive ? "text-clay" : "text-ink/40 hover:text-ink/70"
+              className={`dock-tab flex flex-col items-center gap-0.5 px-3 py-1 transition-colors ${
+                tab.special ? "" : isActive ? "text-clay" : "text-ink/40 hover:text-ink"
               }`}
             >
               {tab.icon(isActive)}
