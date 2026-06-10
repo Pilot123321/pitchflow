@@ -118,6 +118,7 @@ export default function PitchCard({
           backgroundSize: "40px 40px",
         }} />
         <div className="absolute inset-0 feed-spotlight" />
+        <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/25 to-transparent" />
       </div>
 
       {/* Scene zone: everything above the paper card lives here, so the
@@ -125,7 +126,7 @@ export default function PitchCard({
       <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center pt-24">
         {/* Reel progress frame: wraps the visible reel exactly (below the
             header, above the paper card) and fills clockwise as it plays */}
-        <div className="absolute left-1.5 right-1.5 top-[6.25rem] bottom-1.5 pointer-events-none" aria-hidden>
+        <div className="absolute left-1.5 right-1.5 top-[7rem] bottom-1.5 pointer-events-none" aria-hidden>
           <svg className="reel-frame w-full h-full">
             <rect className="reel-track" x="2" y="2" rx="18" pathLength={100}
               style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}

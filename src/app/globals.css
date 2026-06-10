@@ -279,6 +279,16 @@ body {
     radial-gradient(circle 4px at 100% 50%, transparent 98%, black) right / 51% 100% no-repeat;
 }
 
+/* Scalloped paper edge: the header hangs over the scene like a torn
+   sheet instead of ending in a hard line */
+.paper-torn {
+  background-color: #fdf7ea;
+  background-image: radial-gradient(rgba(67, 41, 15, 0.05) 1px, transparent 0);
+  background-size: 7px 7px;
+  -webkit-mask: radial-gradient(circle 7px at 7px 0, black 98%, transparent) 0 0 / 14px 100% repeat-x;
+  mask: radial-gradient(circle 7px at 7px 0, black 98%, transparent) 0 0 / 14px 100% repeat-x;
+}
+
 /* Accessibility: collapse all motion to plain visibility */
 @media (prefers-reduced-motion: reduce) {
   .feed-card-bg,

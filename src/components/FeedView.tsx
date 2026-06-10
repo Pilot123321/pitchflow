@@ -100,7 +100,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
   return (
     <>
       {/* Header: cream paper bar, Hack the North style */}
-      <div className="fixed top-0 left-0 right-0 z-40 pt-[env(safe-area-inset-top)] paper border-b-2 border-dashed border-ink/10">
+      <div className="fixed top-0 left-0 right-0 z-40 pt-[env(safe-area-inset-top)] paper">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2.5">
             <h1 className="font-display text-ink text-xl font-semibold tracking-tight">
@@ -137,6 +137,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
             </button>
           ))}
         </div>
+        <div className="absolute left-0 right-0 top-full h-2.5 paper-torn" aria-hidden />
       </div>
 
       {/* Overview+detail rail: a minimap of the feed. The focal dot
