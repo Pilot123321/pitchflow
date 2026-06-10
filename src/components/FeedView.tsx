@@ -7,6 +7,9 @@ import PitchCard from "./PitchCard";
 import CoffeeChatModal from "./CoffeeChatModal";
 import WaitlistModal from "./WaitlistModal";
 import type { NeedType } from "@/lib/needs";
+import { sceneFor } from "@/lib/scenes";
+import { paletteFor } from "@/lib/palette";
+import AuroraSky, { sky } from "@/components/AuroraSky";
 
 interface Pitch {
   id: string;
@@ -50,6 +53,9 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
   const [tier, setTier] = useState<TierKey>("launch");
   const [actionPitch, setActionPitch] = useState<Pitch | null>(null);
   const [focalIndex, setFocalIndex] = useState(0);
+  const [showTips, setShowTips] = useState(false);
+  const actionPitchRef = useRef<Pitch | null>(null);
+  actionPitchRef.current = actionPitch;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -74,8 +80,11 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
       card.style.setProperty("--offset", String(Math.max(-1, Math.min(1, d))));
       card.style.setProperty("--focus", String(Math.max(0, 1 - Math.abs(d))));
     });
-    // Film advance: one reel of scroll pulls four sprocket holes past
+    // Film advance: one reel of scroll pulls four sprocket holes past;
+    // the header reel spins with it and the aurora sky reads the same bus
     headerRef.current?.style.setProperty("--film", `${(pos * 64).toFixed(1)}px`);
+    headerRef.current?.style.setProperty("--reel-rot", `${(pos * 180).toFixed(1)}deg`);
+    sky.pos = pos;
     const focal = Math.min(pitches.length - 1, Math.max(0, Math.round(pos)));
     setFocalIndex((f) => (f === focal ? f : focal));
   }
@@ -92,6 +101,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
   }
 
   useEffect(() => {
+    sky.palettes = pitches.map((p) => paletteFor(p.gradient));
     cardRefs.current = cardRefs.current.slice(0, pitches.length);
     containerRef.current?.scrollTo({ top: 0 });
     setFocalIndex(0);
@@ -99,6 +109,40 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
     return () => cancelAnimationFrame(rafRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pitches]);
+
+  // House lights: settle into a reel for a few seconds and the chrome
+  // dims like a theater going dark; any input raises the lights.
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    function lightsUp() {
+      document.body.removeAttribute("data-lights");
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (!actionPitchRef.current) document.body.setAttribute("data-lights", "down");
+      }, 4000);
+    }
+    const opts = { capture: true } as AddEventListenerOptions;
+    ["pointermove", "pointerdown", "keydown", "touchstart"].forEach((e) => window.addEventListener(e, lightsUp));
+    window.addEventListener("scroll", lightsUp, opts);
+    lightsUp();
+    return () => {
+      ["pointermove", "pointerdown", "keydown", "touchstart"].forEach((e) => window.removeEventListener(e, lightsUp));
+      window.removeEventListener("scroll", lightsUp, opts);
+      clearTimeout(timer);
+      document.body.removeAttribute("data-lights");
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!localStorage.getItem("pf-tips-seen")) setShowTips(true);
+  }, []);
+
+  function dismissTips() {
+    setShowTips(false);
+    try {
+      localStorage.setItem("pf-tips-seen", "1");
+    } catch {}
+  }
 
   // Keyboard: ↑/↓ or j/k move between reels, L likes, C opens the pitch
   useEffect(() => {
@@ -128,11 +172,26 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
   return (
     <>
       {/* Header: cream paper bar, Hack the North style */}
-      <div ref={headerRef} className="fixed top-0 left-0 right-0 z-40 pt-[env(safe-area-inset-top)] paper">
+      <div ref={headerRef} className="chrome-dim fixed top-0 left-0 right-0 z-40 pt-[env(safe-area-inset-top)] paper">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2.5">
-            <h1 className="font-display text-ink text-xl font-semibold tracking-tight">
-              Pitch<span className="text-clay">Flow</span>
+            <h1 className="font-display text-ink text-xl font-semibold tracking-tight flex items-center gap-1.5">
+              <svg
+                className="w-4 h-4 text-clay"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                style={{ transform: "rotate(var(--reel-rot, 0deg))" }}
+                aria-hidden
+              >
+                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2.2" />
+                <circle cx="12" cy="6.8" r="1.7" />
+                <circle cx="16.9" cy="10.4" r="1.7" />
+                <circle cx="15.1" cy="16.3" r="1.7" />
+                <circle cx="8.9" cy="16.3" r="1.7" />
+                <circle cx="7.1" cy="10.4" r="1.7" />
+                <circle cx="12" cy="12" r="1.5" />
+              </svg>
+              <span>Pitch<span className="text-clay">Flow</span></span>
             </h1>
             <Link
               href="/rfs"
@@ -143,7 +202,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
           </div>
           <Link
             href="/brainstorm"
-            className="px-3.5 py-1.5 rounded-full bg-brick text-cream text-xs font-display font-semibold shadow hover:bg-[#8f1f1f] transition-colors"
+            className="px-3.5 py-1.5 rounded-full bg-brick text-cream text-xs font-display font-semibold shadow hover:bg-[#ff7a93] transition-colors"
           >
             ✦ Brainstorm
           </Link>
@@ -173,7 +232,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
       {pitches.length > 1 && (
         <nav
           aria-label="Pitch overview"
-          className="fixed left-6 top-[36%] -translate-y-1/2 z-40 flex flex-col items-start gap-2"
+          className="chrome-dim fixed left-6 top-[36%] -translate-y-1/2 z-40 flex flex-col items-start gap-2"
         >
           {pitches.map((p, i) => {
             const isFocal = i === focalIndex;
@@ -186,8 +245,10 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
                 className="group relative flex items-center py-0.5"
               >
                 <span
-                  className={`block w-1 rounded-full transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
-                    isFocal ? "h-4 bg-cream shadow" : "h-1 bg-cream/40 group-hover:bg-cream/70"
+                  className={`block rounded-[3px] bg-gradient-to-br ${sceneFor(p.gradient)} transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
+                    isFocal
+                      ? "w-4 h-6 ring-2 ring-ink/70 shadow-md"
+                      : "w-3 h-2 opacity-60 ring-1 ring-ink/25 group-hover:opacity-100"
                   }`}
                 />
                 <span
@@ -203,11 +264,14 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
         </nav>
       )}
 
+      {/* Live aurora sky: one WebGL pass behind every reel */}
+      <AuroraSky />
+
       {/* Feed */}
       <div
         ref={containerRef}
         onScroll={handleScroll}
-        className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
+        className="relative z-10 h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
       >
         {pitches.length === 0 ? (
           <div className="h-screen flex items-center justify-center text-white/40 text-sm">
@@ -239,6 +303,23 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
           onClose={() => setActionPitch(null)}
         />
       )}
+      {/* First-visit ticket: teaches the hidden gestures */}
+      {showTips && (
+        <div className="tip-ticket fixed left-3 top-[7.9rem] z-40 paper rounded-xl px-3.5 py-3 max-w-[238px]">
+          <div className="flex items-center justify-between mb-1.5">
+            <p className="font-display text-ink text-xs font-semibold">🎬 How it works</p>
+            <button onClick={dismissTips} aria-label="Dismiss tips" className="text-ink/40 hover:text-ink text-sm leading-none">
+              ✕
+            </button>
+          </div>
+          <ul className="text-ink/65 text-[11px] leading-relaxed space-y-1">
+            <li>⇆ swipe the card away to watch clean</li>
+            <li>⌨️ j / k or ↑↓ flip reels · L likes</li>
+            <li>🛠️ commit to a beta → lock the perk</li>
+          </ul>
+        </div>
+      )}
+
       {actionPitch && !isInvestorAsk && (
         <WaitlistModal
           pitchId={actionPitch.id}

@@ -279,7 +279,7 @@ export default function WaitlistModal({
                     type="checkbox"
                     checked={committed}
                     onChange={(e) => setCommitted(e.target.checked)}
-                    className="mt-0.5 w-4 h-4 accent-[#698019]"
+                    className="mt-0.5 w-4 h-4 accent-[#7cf5a8]"
                   />
                   <span className="text-ink/70 text-xs leading-relaxed">
                     <span className="font-bold text-ink">🛠️ Commit as a founding tester.</span> Use the beta regularly and

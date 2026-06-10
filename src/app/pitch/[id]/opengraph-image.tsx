@@ -18,21 +18,21 @@ export default async function OgImage({ params }: { params: Promise<{ id: string
           flexDirection: "column",
           justifyContent: "center",
           padding: 90,
-          background: "#fdf7ea",
-          color: "#43290f",
+          background: "#0b0c18",
+          color: "#eef0ff",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 36, background: "#43290f" }} />
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 36, background: "#43290f" }} />
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 36, background: "#eef0ff" }} />
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 36, background: "#eef0ff" }} />
         <div style={{ display: "flex", fontSize: 30, fontWeight: 700, marginBottom: 20 }}>
           <span>Pitch</span>
-          <span style={{ color: "#bd580f" }}>Flow</span>
+          <span style={{ color: "#c8ff4d" }}>Flow</span>
         </div>
         <div style={{ display: "flex", fontSize: 84, fontWeight: 700, letterSpacing: -2 }}>
           {pitch?.startupName ?? "Startup pitch"}
         </div>
-        <div style={{ display: "flex", fontSize: 38, color: "rgba(67,41,15,0.7)", marginTop: 16, maxWidth: 1000 }}>
+        <div style={{ display: "flex", fontSize: 38, color: "rgba(238,240,255,0.62)", marginTop: 16, maxWidth: 1000 }}>
           {pitch?.tagline ?? "Watch the 60-second pitch"}
         </div>
         {pitch?.earlyPerk && (
@@ -41,8 +41,8 @@ export default async function OgImage({ params }: { params: Promise<{ id: string
               display: "flex",
               marginTop: 38,
               padding: "12px 28px",
-              background: "#f5e9cf",
-              color: "#bd580f",
+              background: "#1b2040",
+              color: "#c8ff4d",
               fontSize: 30,
               fontWeight: 700,
               borderRadius: 8,

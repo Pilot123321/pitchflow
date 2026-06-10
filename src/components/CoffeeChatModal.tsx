@@ -69,7 +69,7 @@ export default function CoffeeChatModal({ pitchId, startupName, founderName, cal
                   href={calendlyUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3 rounded-full bg-clay text-cream font-display font-semibold text-sm hover:bg-[#a34d0d] transition-colors"
+                  className="px-6 py-3 rounded-full bg-clay text-cream font-display font-semibold text-sm hover:bg-[#daff85] transition-colors"
                 >
                   ☕ Book a time now
                 </a>

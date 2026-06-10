@@ -118,7 +118,7 @@ export default function ExploreGrid({ pitches }: { pitches: Pitch[] }) {
           <Link
             key={pitch.id}
             href={`/pitch/${pitch.id}`}
-            className="group rounded-2xl overflow-hidden shadow-[0_6px_18px_rgba(46,26,5,0.15)]"
+            className="group rounded-2xl overflow-hidden shadow-[0_6px_18px_rgba(0,0,0,0.4)]"
           >
             <div className={`relative aspect-[3/4] bg-gradient-to-br ${sceneFor(pitch.gradient)} p-4 flex flex-col justify-between`}>
               <div className="absolute inset-0 bg-black/10" />
@@ -127,7 +127,7 @@ export default function ExploreGrid({ pitches }: { pitches: Pitch[] }) {
                 <span className="px-2 py-0.5 rounded-md bg-cream/90 text-ink text-[10px] font-bold uppercase tracking-wide">
                   {pitch.stage}
                 </span>
-                <span className="flex items-center gap-1 text-cream/90 text-[10px] font-bold drop-shadow">
+                <span className="flex items-center gap-1 text-ink/90 text-[10px] font-bold drop-shadow">
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
@@ -136,21 +136,21 @@ export default function ExploreGrid({ pitches }: { pitches: Pitch[] }) {
               </div>
               {/* Center play icon */}
               <div className="relative flex-1 flex items-center justify-center">
-                <div className="w-12 h-12 rounded-full bg-cream/20 backdrop-blur-sm border border-cream/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <svg className="w-5 h-5 text-cream ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 rounded-full bg-ink/10 backdrop-blur-sm border border-ink/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <svg className="w-5 h-5 text-ink ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z" />
                   </svg>
                 </div>
               </div>
               {/* Bottom info */}
               <div className="relative">
-                <p className="font-display text-cream font-semibold text-sm mb-0.5 leading-tight drop-shadow">{pitch.startupName}</p>
-                <p className="text-cream/80 text-[11px] leading-tight line-clamp-2">{pitch.tagline}</p>
+                <p className="font-display text-ink font-semibold text-sm mb-0.5 leading-tight drop-shadow">{pitch.startupName}</p>
+                <p className="text-ink/80 text-[11px] leading-tight line-clamp-2">{pitch.tagline}</p>
                 <div className="flex items-center gap-1.5 mt-2">
                   <div className="w-5 h-5 rounded-full bg-cream text-ink flex items-center justify-center text-[8px] font-bold">
                     {pitch.founderAvatar}
                   </div>
-                  <span className="text-cream/80 text-[10px]">{pitch.founderName}</span>
+                  <span className="text-ink/80 text-[10px]">{pitch.founderName}</span>
                 </div>
               </div>
             </div>

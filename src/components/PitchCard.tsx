@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { ctaFor, type NeedType } from "@/lib/needs";
-import { sceneFor } from "@/lib/scenes";
+import Sigil from "@/components/Sigil";
 
 interface PitchCardProps {
   id: string;
@@ -188,7 +188,6 @@ export default function PitchCard({
 
   const action = ctaFor(needType);
   const isIdea = tier === "idea";
-  const scene = sceneFor(gradient);
 
   // Pointer position drives the background spotlight, so the card
   // answers every move of the cursor instead of sitting inert under it.
@@ -259,7 +258,7 @@ export default function PitchCard({
       style={{ "--reel-duration": `${videoSeconds ?? 45}s` } as CSSProperties}
     >
       {/* Background scenery (simulates video), parallax-linked to scroll */}
-      <div className={`absolute inset-0 feed-card-bg bg-gradient-to-br ${scene}`}>
+      <div className="absolute inset-0 feed-card-bg">
         {isVideo && (
           <video
             ref={videoRef}
@@ -282,6 +281,23 @@ export default function PitchCard({
         <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/25 to-transparent" />
       </div>
 
+      {/* Projector beam + dust motes falling from the film strip */}
+      <div className="absolute inset-x-0 top-0 h-[55%] z-[5] pointer-events-none overflow-hidden" aria-hidden>
+        <div className="beam absolute inset-0" />
+        {Array.from({ length: 6 }).map((_, i) => (
+          <span
+            key={i}
+            className="mote"
+            style={{
+              left: `${34 + ((i * 11) % 32)}%`,
+              top: `${8 + ((i * 17) % 34)}%`,
+              animationDelay: `${(i * 1.3) % 7}s`,
+              animationDuration: `${6 + (i % 3) * 2}s`,
+            }}
+          />
+        ))}
+      </div>
+
       {/* Reel progress frame: spans the whole visible screen (below the
           header, above the dock); the card and action stickers live
           inside it. Fills clockwise as the reel plays. */}
@@ -289,10 +305,10 @@ export default function PitchCard({
         <svg className="reel-frame w-full h-full">
           <rect className="reel-track" x="2" y="2" rx="18" pathLength={100}
             style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
-            stroke="rgba(253, 247, 234, 0.2)" strokeWidth="3.5" />
+            stroke="rgba(238, 240, 255, 0.2)" strokeWidth="3.5" />
           <rect className="reel-progress" x="2" y="2" rx="18" pathLength={100}
             style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
-            stroke="rgba(253, 247, 234, 0.95)" strokeWidth="3.5" strokeLinecap="round" />
+            stroke="rgba(238, 240, 255, 0.95)" strokeWidth="3.5" strokeLinecap="round" />
         </svg>
       </div>
 
@@ -311,16 +327,16 @@ export default function PitchCard({
         <button
           onClick={isVideo ? togglePlay : undefined}
           aria-label={playing ? "Pause pitch video" : "Play pitch video"}
-          className={`breathe w-20 h-20 rounded-full bg-cream/15 backdrop-blur-sm flex items-center justify-center border-2 border-cream/40 transition-opacity duration-500 ${
+          className={`breathe w-20 h-20 rounded-full bg-ink/10 backdrop-blur-sm flex items-center justify-center border-2 border-ink/40 transition-opacity duration-500 ${
             playing ? "opacity-25 hover:opacity-90" : "opacity-100"
           }`}
         >
           {playing ? (
-            <svg className="w-8 h-8 text-cream" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8 text-ink" fill="currentColor" viewBox="0 0 24 24">
               <path d="M7 5h4v14H7zM13 5h4v14h-4z" />
             </svg>
           ) : (
-            <svg className="w-8 h-8 text-cream ml-1" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8 text-ink ml-1" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z" />
             </svg>
           )}
@@ -363,7 +379,7 @@ export default function PitchCard({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </div>
-          <span key={upvotes} className="count-pop text-cream text-xs font-bold drop-shadow">{upvotes}</span>
+          <span key={upvotes} className="count-pop text-ink text-xs font-bold drop-shadow">{upvotes}</span>
         </button>
 
         <Link href={`/pitch/${id}`} className="flex flex-col items-center gap-1 group">
@@ -372,7 +388,7 @@ export default function PitchCard({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
           </div>
-          <span className="text-cream text-xs font-bold drop-shadow">{comments}</span>
+          <span className="text-ink text-xs font-bold drop-shadow">{comments}</span>
         </Link>
 
         <button onClick={handleShare} className="flex flex-col items-center gap-1 group">
@@ -389,7 +405,7 @@ export default function PitchCard({
               </svg>
             )}
           </div>
-          <span className="text-cream text-xs font-bold drop-shadow">{shared ? "Copied!" : "Share"}</span>
+          <span className="text-ink text-xs font-bold drop-shadow">{shared ? "Copied!" : "Share"}</span>
         </button>
       </div>
 
@@ -428,7 +444,8 @@ export default function PitchCard({
             )}
           </div>
 
-          <Link href={`/pitch/${id}`}>
+          <Link href={`/pitch/${id}`} className="flex items-center gap-2">
+            <Sigil name={startupName} size={22} className="text-clay shrink-0" />
             <h2 className="font-display text-ink text-2xl font-semibold mb-0.5">{startupName}</h2>
           </Link>
           <p className="text-ink/80 text-sm mb-2">{tagline}</p>
@@ -472,8 +489,8 @@ export default function PitchCard({
               onClick={() => onAction(id)}
               className={`mt-1 w-full py-2.5 rounded-full font-display font-semibold text-sm flex items-center justify-center gap-2 shadow-md active:scale-[0.98] transition-all ${
                 action.style === "grad"
-                  ? "bg-clay text-cream hover:bg-[#a34d0d]"
-                  : "bg-brick text-cream hover:bg-[#8f1f1f]"
+                  ? "bg-clay text-cream hover:bg-[#daff85]"
+                  : "bg-brick text-cream hover:bg-[#ff7a93]"
               }`}
             >
               <span>{action.icon}</span>

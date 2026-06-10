@@ -208,7 +208,7 @@ export default function SubmitPage() {
                     value={t}
                     checked={form.needType === t}
                     onChange={() => update("needType", t)}
-                    className="mt-1 w-4 h-4 accent-[#bd580f]"
+                    className="mt-1 w-4 h-4 accent-[#c8ff4d]"
                   />
                   <span className="text-xs leading-relaxed text-ink/70">
                     <span className="font-bold text-ink">{NEED_CTA[t].icon} {NEED_CTA[t].pickerLabel}</span>

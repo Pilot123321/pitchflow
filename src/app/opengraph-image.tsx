@@ -15,18 +15,18 @@ export default function OgImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "#fdf7ea",
-          color: "#43290f",
+          background: "#0b0c18",
+          color: "#eef0ff",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 36, background: "#43290f" }} />
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 36, background: "#43290f" }} />
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 36, background: "#eef0ff" }} />
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 36, background: "#eef0ff" }} />
         <div style={{ display: "flex", fontSize: 110, fontWeight: 700, letterSpacing: -3 }}>
           <span>Pitch</span>
-          <span style={{ color: "#bd580f" }}>Flow</span>
+          <span style={{ color: "#c8ff4d" }}>Flow</span>
         </div>
-        <div style={{ display: "flex", fontSize: 36, color: "rgba(67,41,15,0.65)", marginTop: 12 }}>
+        <div style={{ display: "flex", fontSize: 36, color: "rgba(238,240,255,0.6)", marginTop: 12 }}>
           Discover startups in 60 seconds · earn early merit
         </div>
       </div>

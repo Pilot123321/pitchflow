@@ -377,8 +377,8 @@ export default function PitchDetail({ pitch, topBelievers = [] }: { pitch: Pitch
           onClick={() => setShowModal(true)}
           className={`pointer-events-auto w-full py-4 rounded-full font-display font-semibold text-sm flex items-center justify-center gap-2 active:scale-[0.98] transition-all ${
             action.style === "grad"
-              ? "bg-clay text-cream hover:bg-[#a34d0d]"
-              : "bg-brick text-cream hover:bg-[#8f1f1f]"
+              ? "bg-clay text-cream hover:bg-[#daff85]"
+              : "bg-brick text-cream hover:bg-[#ff7a93]"
           }`}
         >
           <span>{action.icon}</span> {action.cta}

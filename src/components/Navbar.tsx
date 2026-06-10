@@ -59,7 +59,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed bottom-[max(0.5rem,env(safe-area-inset-bottom))] left-3 right-3 z-50 paper rounded-2xl border border-ink/15 shadow-[0_-6px_24px_rgba(46,26,5,0.18),0_14px_30px_rgba(46,26,5,0.4)]">
+    <nav className="chrome-dim fixed bottom-[max(0.5rem,env(safe-area-inset-bottom))] left-3 right-3 z-50 paper rounded-2xl border border-ink/15 shadow-[0_-6px_24px_rgba(0,0,0,0.45),0_14px_30px_rgba(0,0,0,0.6)]">
       <div className="max-w-lg mx-auto flex items-center justify-around py-2">
         {tabs.map((tab) => {
           const isActive = pathname === tab.href;

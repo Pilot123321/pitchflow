@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fdf7ea;
-  --foreground: #43290f;
+  --background: #0b0c18;
+  --foreground: #eef0ff;
 }
 
 @theme inline {
@@ -12,13 +12,16 @@
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-fredoka);
 
-  /* Hack the North-inspired palette: warm paper + scrapbook inks */
-  --color-cream: #fdf7ea;
-  --color-ink: #43290f;
-  --color-clay: #bd580f;
-  --color-brick: #aa2222;
-  --color-lagoon: #007899;
-  --color-moss: #698019;
+  /* Launch Window palette. Token names kept (one-line rebrand):
+     cream = panel surface (carbon glass), ink = luma text,
+     clay = pulse chartreuse, brick = ember coral,
+     lagoon = ion cyan, moss = signal mint */
+  --color-cream: #161a33;
+  --color-ink: #eef0ff;
+  --color-clay: #c8ff4d;
+  --color-brick: #ff5c7a;
+  --color-lagoon: #5be9ff;
+  --color-moss: #7cf5a8;
 }
 
 * {
@@ -297,17 +300,22 @@ body {
   animation: count-pop 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Scrapbook paper card: warm cream with a faint pulp grain */
+/* Carbon glass panel: the paper of the Launch Window theme */
 .paper {
-  background-color: #fdf7ea;
-  background-image: radial-gradient(rgba(67, 41, 15, 0.05) 1px, transparent 0);
+  background-color: rgba(22, 26, 51, 0.88);
+  background-image: radial-gradient(rgba(238, 240, 255, 0.06) 1px, transparent 0);
   background-size: 7px 7px;
-  box-shadow: 0 14px 34px rgba(46, 26, 5, 0.28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(238, 240, 255, 0.09);
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(238, 240, 255, 0.07);
 }
 
 /* Ticket stub: punched semicircles on both ends */
 .ticket {
-  background: #f5e9cf;
+  background: rgba(200, 255, 77, 0.12);
   -webkit-mask:
     radial-gradient(circle 4px at 0 50%, transparent 98%, black) left / 51% 100% no-repeat,
     radial-gradient(circle 4px at 100% 50%, transparent 98%, black) right / 51% 100% no-repeat;
@@ -322,12 +330,12 @@ body {
    roller, and --film (set per-frame from feed scroll) advances the
    perforations sideways as reels are pulled past. */
 .film-edge {
-  background: linear-gradient(180deg, #5a3a1c 0%, #43290f 40%, #2a1804 100%);
+  background: linear-gradient(180deg, #1b2040 0%, #10132b 40%, #05060e 100%);
   -webkit-mask: radial-gradient(ellipse 4.5px 3.5px at 8px 50%, transparent 97%, black)
     var(--film, 0px) 50% / 16px 100% repeat-x;
   mask: radial-gradient(ellipse 4.5px 3.5px at 8px 50%, transparent 97%, black)
     var(--film, 0px) 50% / 16px 100% repeat-x;
-  filter: drop-shadow(0 4px 9px rgba(46, 26, 5, 0.4));
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.55));
   will-change: mask-position;
 }
 
@@ -337,6 +345,55 @@ body {
 }
 .dock-tab:hover {
   transform: translateY(-4px) scale(1.12);
+}
+
+/* ============================================================
+   Paper Cinema layer: the feed behaves like a tiny theater.
+   ============================================================ */
+
+/* Projector beam: light falls from the film strip onto the reel */
+.beam {
+  background: linear-gradient(180deg, rgba(238, 240, 255, 0.14), rgba(238, 240, 255, 0.03) 60%, transparent);
+  clip-path: polygon(41% 0, 59% 0, 90% 100%, 10% 100%);
+  opacity: calc(var(--focus, 1) * 0.9);
+}
+
+/* Dust motes drifting down through the beam */
+@keyframes mote {
+  0% { transform: translate3d(0, -10px, 0); opacity: 0; }
+  15% { opacity: 0.75; }
+  75% { opacity: 0.35; }
+  100% { transform: translate3d(16px, 130px, 0); opacity: 0; }
+}
+.mote {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 99px;
+  background: rgba(238, 240, 255, 0.9);
+  opacity: 0;
+}
+[data-focal="true"] .mote {
+  animation: mote 7s linear infinite;
+}
+
+/* House lights: when you settle into a reel the chrome dims like a
+   theater going dark; any input brings the lights back up */
+.chrome-dim {
+  transition: opacity 0.9s ease;
+}
+body[data-lights="down"] .chrome-dim {
+  opacity: 0.25;
+}
+
+/* First-visit ticket */
+@keyframes tip-in {
+  from { transform: translateY(18px) rotate(-1.5deg); opacity: 0; }
+  to { transform: translateY(0) rotate(-1.5deg); opacity: 1; }
+}
+.tip-ticket {
+  transform: rotate(-1.5deg);
+  animation: tip-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* Accessibility: collapse all motion to plain visibility */
@@ -373,6 +430,12 @@ body {
   .swipe-card.card-fly-right {
     animation: none;
     opacity: 0;
+  }
+  [data-focal="true"] .mote {
+    animation: none;
+  }
+  .tip-ticket {
+    animation: none;
   }
   .burst-particle {
     display: none;
