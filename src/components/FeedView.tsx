@@ -148,7 +148,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
       {pitches.length > 1 && (
         <nav
           aria-label="Pitch overview"
-          className="fixed left-4 top-[36%] -translate-y-1/2 z-40 flex flex-col items-start gap-2.5"
+          className="fixed left-6 top-[36%] -translate-y-1/2 z-40 flex flex-col items-start gap-2"
         >
           {pitches.map((p, i) => {
             const isFocal = i === focalIndex;
@@ -161,12 +161,12 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
                 className="group relative flex items-center py-0.5"
               >
                 <span
-                  className={`block w-1.5 rounded-full transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
-                    isFocal ? "h-6 bg-cream shadow" : "h-1.5 bg-cream/40 group-hover:bg-cream/70"
+                  className={`block w-1 rounded-full transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
+                    isFocal ? "h-4 bg-cream shadow" : "h-1 bg-cream/40 group-hover:bg-cream/70"
                   }`}
                 />
                 <span
-                  className={`absolute left-4 whitespace-nowrap px-1.5 py-0.5 rounded-md bg-cream text-ink shadow text-[10px] font-bold transition-all duration-300 ${
+                  className={`absolute left-3 whitespace-nowrap px-1.5 py-0.5 rounded-md bg-cream text-ink shadow text-[9px] font-bold transition-all duration-300 ${
                     isFocal ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-1 pointer-events-none"
                   }`}
                 >
