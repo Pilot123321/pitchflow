@@ -73,8 +73,22 @@ export default function PitchCard({
   const [shared, setShared] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [flyDir, setFlyDir] = useState<"left" | "right" | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef({ x: 0, y: 0, armed: false, id: -1 });
+
+  // Bring the card back whenever the user scrolls away and returns
+  useEffect(() => {
+    if (!isFocal) {
+      setDismissed(false);
+      setFlyDir(null);
+      setDragging(false);
+    }
+  }, [isFocal]);
 
   const isVideo = !videoFailed && /\.(mp4|webm|mov)(\?|#|$)/i.test(videoUrl ?? "");
 
@@ -108,6 +122,56 @@ export default function PitchCard({
     const v = videoRef.current;
     if (!v || !v.duration) return;
     rootRef.current?.style.setProperty("--played", (v.currentTime / v.duration).toFixed(4));
+  }
+
+  // Swipe-to-clear: horizontal drags grab the card (vertical stays with
+  // the feed); past the threshold it flies away in 3D, else springs back.
+  function setSwipe(dx: number) {
+    const el = cardRef.current;
+    if (!el) return;
+    const cl = Math.max(-180, Math.min(180, dx));
+    el.style.setProperty("--sx", `${cl}px`);
+    el.style.setProperty("--sr", `${cl * 0.12}deg`);
+  }
+
+  function onCardDown(e: React.PointerEvent) {
+    dragRef.current = { x: e.clientX, y: e.clientY, armed: false, id: e.pointerId };
+  }
+
+  function onCardMove(e: React.PointerEvent) {
+    const d = dragRef.current;
+    if (d.id !== e.pointerId) return;
+    const dx = e.clientX - d.x;
+    const dy = e.clientY - d.y;
+    if (!d.armed) {
+      if (Math.abs(dx) > 14 && Math.abs(dx) > Math.abs(dy)) {
+        d.armed = true;
+        setDragging(true);
+        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+      } else {
+        return;
+      }
+    }
+    setSwipe(dx);
+  }
+
+  function onCardUp(e: React.PointerEvent) {
+    const d = dragRef.current;
+    if (d.id !== e.pointerId) return;
+    const dx = e.clientX - d.x;
+    d.id = -1;
+    if (!d.armed) return;
+    d.armed = false;
+    setDragging(false);
+    if (Math.abs(dx) > 90) {
+      setFlyDir(dx < 0 ? "left" : "right");
+      setTimeout(() => {
+        setDismissed(true);
+        setFlyDir(null);
+      }, 500);
+    } else {
+      setSwipe(0);
+    }
   }
 
   // Upvotes survive refresh: hydrate from the local ledger
@@ -326,7 +390,30 @@ export default function PitchCard({
       {/* Bottom paper card. Name + tagline are always legible (the
           "label" zoom level); details cascade in when focal. */}
       <div className="relative z-10 w-full px-5 pb-24 swing-in-wrap feed-card-content">
-        <div className="paper swing-in rounded-2xl px-4 py-3">
+        {dismissed ? (
+          <button
+            onClick={() => setDismissed(false)}
+            className="paper swing-in rounded-full px-4 py-2.5 inline-flex items-center gap-2 text-ink text-xs font-bold shadow-md"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 15l7-7 7 7" />
+            </svg>
+            {startupName}
+          </button>
+        ) : (
+        <div
+          ref={cardRef}
+          onPointerDown={onCardDown}
+          onPointerMove={onCardMove}
+          onPointerUp={onCardUp}
+          onPointerCancel={onCardUp}
+          className={`relative paper swing-in swipe-card rounded-2xl px-4 py-3 ${dragging ? "dragging" : ""} ${
+            flyDir ? `card-fly-${flyDir}` : ""
+          }`}
+        >
+          <span className="absolute top-2.5 right-3 text-ink/25 text-[10px] font-bold select-none" aria-hidden>
+            swipe ⇆
+          </span>
           <div className="flex items-center gap-2 mb-2 reveal reveal-1">
             <span className="px-2 py-0.5 rounded-md border border-dashed border-lagoon text-lagoon text-[11px] font-bold uppercase tracking-wide">{category}</span>
             <span className="px-2 py-0.5 rounded-md border border-dashed border-moss text-moss text-[11px] font-bold uppercase tracking-wide">{stage}</span>
@@ -388,6 +475,7 @@ export default function PitchCard({
             </button>
           </div>
         </div>
+        )}
       </div>
     </div>
   );

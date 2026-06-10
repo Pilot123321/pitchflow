@@ -185,6 +185,35 @@ body {
   }
 }
 
+/* Swipe-to-clear: the card follows the finger in 3D and can be
+   flicked off-screen to watch the reel unobstructed */
+.swipe-card {
+  touch-action: pan-y;
+  transform: translate3d(var(--sx, 0px), 0, 0) rotateY(var(--sr, 0deg));
+  will-change: transform, opacity;
+}
+.swipe-card:not(.dragging) {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes card-fly-left {
+  to {
+    transform: translate3d(-140%, -6%, -140px) rotateY(55deg) rotateZ(-8deg);
+    opacity: 0;
+  }
+}
+@keyframes card-fly-right {
+  to {
+    transform: translate3d(140%, -6%, -140px) rotateY(-55deg) rotateZ(8deg);
+    opacity: 0;
+  }
+}
+.swipe-card.card-fly-left {
+  animation: card-fly-left 0.5s cubic-bezier(0.45, 0, 0.8, 0.4) forwards;
+}
+.swipe-card.card-fly-right {
+  animation: card-fly-right 0.5s cubic-bezier(0.45, 0, 0.8, 0.4) forwards;
+}
+
 /* Action stickers pop toward the viewer on hover */
 .sticker-rail {
   perspective: 600px;
@@ -336,6 +365,14 @@ body {
   .paper-torn {
     transform: none;
     filter: none;
+  }
+  .swipe-card {
+    transition: none;
+  }
+  .swipe-card.card-fly-left,
+  .swipe-card.card-fly-right {
+    animation: none;
+    opacity: 0;
   }
   .burst-particle {
     display: none;
