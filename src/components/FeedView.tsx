@@ -55,6 +55,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
   const [actionPitch, setActionPitch] = useState<Pitch | null>(null);
   const [focalIndex, setFocalIndex] = useState(0);
   const [showTips, setShowTips] = useState(false);
+  const [soundOn, setSoundOn] = useState(false);
   const actionPitchRef = useRef<Pitch | null>(null);
   actionPitchRef.current = actionPitch;
 
@@ -137,7 +138,16 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
 
   useEffect(() => {
     if (!localStorage.getItem("pf-tips-seen")) setShowTips(true);
+    setSoundOn(localStorage.getItem("pf-sound") === "1");
   }, []);
+
+  function toggleSound() {
+    const v = !soundOn;
+    setSoundOn(v);
+    try {
+      localStorage.setItem("pf-sound", v ? "1" : "0");
+    } catch {}
+  }
 
   function dismissTips() {
     setShowTips(false);
@@ -201,6 +211,15 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
             >
               RFS
             </Link>
+            <button
+              onClick={toggleSound}
+              aria-label={soundOn ? "Mute reels" : "Unmute reels"}
+              className={`px-2 py-0.5 rounded-md border border-dashed text-[11px] font-bold transition-colors ${
+                soundOn ? "border-clay/60 text-clay" : "border-ink/30 text-ink/50 hover:text-ink"
+              }`}
+            >
+              {soundOn ? "🔊" : "🔇"}
+            </button>
           </div>
           <Link
             href="/brainstorm"
@@ -290,7 +309,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
               data-focal={i === focalIndex}
               className="reel-3d h-screen w-full snap-start relative"
             >
-              <PitchCard {...pitch} isFocal={i === focalIndex} onAction={() => setActionPitch(pitch)} />
+              <PitchCard {...pitch} isFocal={i === focalIndex} soundOn={soundOn} onAction={() => setActionPitch(pitch)} />
             </div>
           ))
         )}

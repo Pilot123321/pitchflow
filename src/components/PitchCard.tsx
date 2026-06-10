@@ -31,6 +31,7 @@ interface PitchCardProps {
   waitlistCount?: number;
   videoSeconds?: number;
   isFocal?: boolean;
+  soundOn?: boolean;
   onAction: (id: string) => void;
 }
 
@@ -65,6 +66,7 @@ export default function PitchCard({
   earlyPerk,
   videoSeconds,
   isFocal,
+  soundOn,
   onAction,
 }: PitchCardProps) {
   const [upvotes, setUpvotes] = useState(initialUpvotes);
@@ -79,6 +81,30 @@ export default function PitchCard({
   const [flyDir, setFlyDir] = useState<"left" | "right" | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Drive the embedded YouTube player without its SDK
+  const ytCommand = (func: string, args: unknown[] = []) => {
+    iframeRef.current?.contentWindow?.postMessage(
+      JSON.stringify({ event: "command", func, args }),
+      "*"
+    );
+  };
+
+  function applySound() {
+    if (soundOn) {
+      ytCommand("unMute");
+      ytCommand("setVolume", [100]);
+    } else {
+      ytCommand("mute");
+    }
+    if (videoRef.current) videoRef.current.muted = !soundOn;
+  }
+
+  useEffect(() => {
+    if (isFocal) applySound();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [soundOn, isFocal]);
   const cardRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef({ x: 0, y: 0, armed: false, id: -1 });
 
@@ -289,6 +315,8 @@ export default function PitchCard({
       {isEmbed && isFocal && (
         <div className="absolute inset-0 z-[2]" aria-hidden={false}>
           <iframe
+            ref={iframeRef}
+            onLoad={() => setTimeout(applySound, 400)}
             src={source!.embedUrl}
             title={`${startupName} pitch video`}
             className="absolute inset-0 w-full h-full pointer-events-none"
