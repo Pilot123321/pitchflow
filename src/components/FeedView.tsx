@@ -10,6 +10,7 @@ import type { NeedType } from "@/lib/needs";
 import { sceneFor } from "@/lib/scenes";
 import { paletteFor } from "@/lib/palette";
 import { sky } from "@/components/AuroraSky";
+import Constellation3D from "@/components/Constellation3D";
 
 interface Pitch {
   id: string;
@@ -86,6 +87,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
     headerRef.current?.style.setProperty("--reel-rot", `${(pos * 180).toFixed(1)}deg`);
     sky.pos = pos;
     const focal = Math.min(pitches.length - 1, Math.max(0, Math.round(pos)));
+    sky.name = pitches[focal]?.startupName ?? "";
     setFocalIndex((f) => (f === focal ? f : focal));
   }
 
@@ -264,11 +266,15 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
         </nav>
       )}
 
+      {/* 3D constellation of the focal startup, floating in the sky */}
+      <Constellation3D />
+
       {/* Feed (the aurora sky behind it is mounted once in the layout) */}
       <div
         ref={containerRef}
         onScroll={handleScroll}
         className="relative z-10 h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
+        style={{ perspective: "1300px" }}
       >
         {pitches.length === 0 ? (
           <div className="h-screen flex items-center justify-center text-white/40 text-sm">
@@ -282,7 +288,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
                 cardRefs.current[i] = el;
               }}
               data-focal={i === focalIndex}
-              className="h-screen w-full snap-start relative"
+              className="reel-3d h-screen w-full snap-start relative"
             >
               <PitchCard {...pitch} isFocal={i === focalIndex} onAction={() => setActionPitch(pitch)} />
             </div>

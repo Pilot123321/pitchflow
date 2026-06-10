@@ -8,6 +8,7 @@ import type { SkyPalette } from "@/lib/palette";
 export const sky = {
   pos: 0, // fractional reel index
   vel: 0, // |d(pos)/frame|, decays in the render loop
+  name: "", // focal startup name (drives the 3D constellation)
   palettes: [] as SkyPalette[],
 };
 

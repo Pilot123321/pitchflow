@@ -300,6 +300,42 @@ body {
   animation: count-pop 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Rolodex feed: each reel is a plate rotating through 3D space,
+   driven by the same scroll-linked --offset/--focus variables.
+   Focal card rests at identity — flat and ordered. */
+.reel-3d {
+  transform: rotateX(calc(var(--offset, 0) * -26deg))
+    translateZ(calc((1 - var(--focus, 1)) * -110px));
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Holographic foil: merit cards tilt with the pointer and a chromatic
+   sheen slides across with the tilt angle */
+.holo {
+  transform: perspective(700px) rotateX(var(--hy, 0deg)) rotateY(var(--hx, 0deg));
+  transition: transform 0.18s ease-out;
+}
+.holo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(200, 255, 77, 0.16) 43%,
+    rgba(91, 233, 255, 0.2) 50%,
+    rgba(255, 92, 122, 0.16) 57%,
+    transparent 68%
+  );
+  background-size: 230% 230%;
+  background-position: var(--hpx, 50%) var(--hpy, 50%);
+  mix-blend-mode: screen;
+}
+
 /* Carbon glass panel: the paper of the Launch Window theme */
 .paper {
   background-color: rgba(22, 26, 51, 0.88);
@@ -433,6 +469,15 @@ body[data-lights="down"] .chrome-dim {
   }
   [data-focal="true"] .mote {
     animation: none;
+  }
+  .reel-3d {
+    transform: none;
+  }
+  .holo {
+    transform: none;
+  }
+  .holo::after {
+    display: none;
   }
   .tip-ticket {
     animation: none;

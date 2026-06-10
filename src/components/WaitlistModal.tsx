@@ -169,9 +169,25 @@ export default function WaitlistModal({
               )}
             </p>
 
-            {/* Early Merit punch card */}
+            {/* Early Merit punch card — holographic, tilts with the pointer */}
             {isUsers && merit && (
-              <div className="border-2 border-dashed border-ink/15 rounded-xl p-4 mb-5 text-left bg-ink/[0.02]">
+              <div
+                className="holo relative border-2 border-dashed border-ink/15 rounded-xl p-4 mb-5 text-left bg-ink/[0.02]"
+                onPointerMove={(e) => {
+                  const el = e.currentTarget;
+                  const r = el.getBoundingClientRect();
+                  const nx = (e.clientX - r.left) / r.width - 0.5;
+                  const ny = (e.clientY - r.top) / r.height - 0.5;
+                  el.style.setProperty("--hx", `${nx * 14}deg`);
+                  el.style.setProperty("--hy", `${-ny * 14}deg`);
+                  el.style.setProperty("--hpx", `${50 + nx * 90}%`);
+                  el.style.setProperty("--hpy", `${50 + ny * 90}%`);
+                }}
+                onPointerLeave={(e) => {
+                  const el = e.currentTarget;
+                  ["--hx", "--hy"].forEach((v) => el.style.setProperty(v, "0deg"));
+                }}
+              >
                 <div className="flex items-center justify-between mb-3">
                   <span className="font-display text-ink text-sm font-semibold">Early Merit · {startupName}</span>
                   <span className="text-ink/40 text-[10px] font-bold uppercase tracking-wider">No. {merit.supporterNumber.toLocaleString()}</span>
