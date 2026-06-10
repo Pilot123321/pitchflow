@@ -46,6 +46,7 @@ export interface Pitch {
   needLabel?: string;
   needText?: string;
   earlyPerk?: string;
+  videoSeconds?: number;
   waitlistCount?: number;
   watchRate?: string;
   problem?: string;

@@ -59,11 +59,11 @@ body {
 /* Modal slide-up animation */
 @keyframes slide-up {
   from {
-    transform: translateY(100%);
+    transform: perspective(1200px) translateY(100%) rotateX(8deg);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: perspective(1200px) translateY(0) rotateX(0deg);
     opacity: 1;
   }
 }
@@ -98,14 +98,31 @@ body {
 }
 
 /* Card content: semantic zoom. Off-focus cards dim and sink;
-   the focal card rises to full opacity. Pointer tilt (--rx/--ry,
-   set per-frame from pointermove) rides on the same transform. */
+   the focal card rises to full opacity. */
 .feed-card-content {
   opacity: calc(0.25 + 0.75 * var(--focus, 1));
-  transform: perspective(900px)
-    translate3d(0, calc((1 - var(--focus, 1)) * 28px), 0)
-    rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg));
+  transform: translate3d(0, calc((1 - var(--focus, 1)) * 28px), 0);
   will-change: transform, opacity;
+}
+
+/* Reel progress frame: a border around the reel that fills clockwise
+   over the (simulated) video duration while the card is focal.
+   Losing focus resets it, like a paused-and-rewound reel. */
+.reel-frame rect {
+  fill: none;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+.reel-frame .reel-track {
+  stroke-dashoffset: 0;
+}
+[data-focal="true"] .reel-frame .reel-progress {
+  animation: reel-trace var(--reel-duration, 45s) linear forwards;
+}
+@keyframes reel-trace {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Pointer-tracked spotlight on the card background */
@@ -136,13 +153,64 @@ body {
 [data-focal="true"] .reveal-4 { transition-delay: 0.24s; }
 [data-focal="true"] .reveal-5 { transition-delay: 0.3s; }
 
-/* Play button breathes only on the focal card */
+/* ============================================================
+   3D motion layer. Depth lives in entrances and interactions;
+   resting states stay flat and ordered.
+   ============================================================ */
+
+/* Paper card lays itself down like a card on a table when focal */
+.swing-in-wrap {
+  perspective: 1000px;
+}
+.swing-in {
+  transform-origin: 50% 100%;
+}
+[data-focal="true"] .swing-in {
+  animation: swing-in 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes swing-in {
+  from {
+    transform: rotateX(-12deg) translateY(20px);
+    opacity: 0.4;
+  }
+  to {
+    transform: rotateX(0deg) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Action stickers pop toward the viewer on hover */
+.sticker-rail {
+  perspective: 600px;
+}
+.sticker-rail a > div,
+.sticker-rail button > div {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sticker-rail a:hover > div,
+.sticker-rail button:hover > div {
+  transform: translateZ(16px);
+}
+
+/* Play button flips in like a coin, then breathes, on the focal card */
 @keyframes breathe {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.07); }
 }
+@keyframes coin-in {
+  from {
+    transform: rotateY(140deg) scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: rotateY(0deg) scale(1);
+    opacity: 1;
+  }
+}
 [data-focal="true"] .breathe {
-  animation: breathe 3.2s ease-in-out infinite;
+  animation:
+    coin-in 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    breathe 3.2s ease-in-out 1.2s infinite;
 }
 
 /* Upvote: overshooting spring instead of a linear bounce */
@@ -165,7 +233,7 @@ body {
   }
   100% {
     transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
-      scale(1.1) rotate(var(--rot, 0deg));
+      scale(1.1) rotate(var(--rot, 0deg)) rotateY(540deg);
     opacity: 0;
   }
 }
@@ -224,9 +292,15 @@ body {
     transition: none;
   }
   [data-focal="true"] .breathe,
+  [data-focal="true"] .reel-frame .reel-progress,
+  [data-focal="true"] .swing-in,
   .animate-upvote-spring,
   .count-pop {
     animation: none;
+  }
+  .sticker-rail a:hover > div,
+  .sticker-rail button:hover > div {
+    transform: none;
   }
   .burst-particle {
     display: none;

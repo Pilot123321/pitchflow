@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPitches, addPitch } from "@/lib/data";
+import { NEED_CTA, type NeedType } from "@/lib/needs";
 
 export async function GET() {
   const pitches = getPitches();
@@ -28,6 +29,7 @@ export async function POST(req: NextRequest) {
   ];
 
   const founderName: string = body.founderName;
+  const needType: NeedType = body.needType in NEED_CTA ? body.needType : "users";
   const pitch = addPitch({
     founderName,
     founderTitle: body.founderTitle,
@@ -47,9 +49,10 @@ export async function POST(req: NextRequest) {
     gradient: gradients[Math.floor(Math.random() * gradients.length)],
     // --- framework fields (optional) ---
     tier: body.tier === "idea" ? "idea" : "launch",
-    needType: body.needType || "users",
-    needLabel: body.needLabel || "",
+    needType,
+    needLabel: body.needLabel || NEED_CTA[needType].label,
     needText: body.needText || "",
+    earlyPerk: body.earlyPerk || undefined,
     watchRate: body.watchRate || "",
     problem: body.problem || "",
     solution: body.solution || "",

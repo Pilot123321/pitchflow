@@ -13,7 +13,7 @@
     "traction": "12 beta users, $2K MRR",
     "location": "San Francisco, CA",
     "askAmount": "$500K",
-    "upvotes": 149,
+    "upvotes": 151,
     "comments": 23,
     "chatRequests": 8,
     "calendlyUrl": "https://calendly.com",
@@ -51,7 +51,8 @@
         "text": "Crossed $2K MRR with our first 12 design partners."
       }
     ],
-    "earlyPerk": "50% off for life"
+    "earlyPerk": "50% off for life",
+    "videoSeconds": 37
   },
   {
     "id": "2",
@@ -67,7 +68,7 @@
     "traction": "340 waitlist signups",
     "location": "Austin, TX",
     "askAmount": "$250K",
-    "upvotes": 91,
+    "upvotes": 92,
     "comments": 15,
     "chatRequests": 5,
     "calendlyUrl": "https://calendly.com",
@@ -96,7 +97,8 @@
         "text": "Hit 340 waitlist signups from two SMB owner communities."
       }
     ],
-    "earlyPerk": "Free Pro for 12 months"
+    "earlyPerk": "Free Pro for 12 months",
+    "videoSeconds": 44
   },
   {
     "id": "3",
@@ -145,7 +147,8 @@
         "date": "2026-03-25T00:00:00Z",
         "text": "Signed LOIs with all 3 pilot clinics — moving to paid contracts next month."
       }
-    ]
+    ],
+    "videoSeconds": 51
   },
   {
     "id": "4",
@@ -170,8 +173,8 @@
     "createdAt": "2026-03-25T16:45:00Z",
     "gradient": "from-amber-600 to-orange-800",
     "tier": "launch",
-    "needType": "investors",
-    "needLabel": "Raising a seed round",
+    "needType": "recruiting",
+    "needLabel": "Hiring a founding engineer",
     "needText": "Growing 30% MoM and opening a $1.5M seed. Book a chat if you back developer tooling.",
     "waitlistCount": 0,
     "watchRate": "79% watch to end",
@@ -199,7 +202,8 @@
         "date": "2026-03-24T00:00:00Z",
         "text": "Passed $8K MRR across 45 teams — net revenue retention now 118%."
       }
-    ]
+    ],
+    "videoSeconds": 58
   },
   {
     "id": "5",
@@ -248,7 +252,8 @@
         "date": "2026-03-23T00:00:00Z",
         "text": "Crossed $200K/mo in processed payroll across 18 companies."
       }
-    ]
+    ],
+    "videoSeconds": 34
   },
   {
     "id": "6",
@@ -273,8 +278,8 @@
     "createdAt": "2026-03-23T08:00:00Z",
     "gradient": "from-fuchsia-600 to-purple-800",
     "tier": "launch",
-    "needType": "users",
-    "needLabel": "Looking for early users",
+    "needType": "marketing",
+    "needLabel": "Help us spread the word",
     "needText": "Expanding to new cities — join the waitlist to get PetMatch in your area and help us prioritize shelters near you.",
     "waitlistCount": 1840,
     "watchRate": "85% watch to end",
@@ -293,7 +298,8 @@
         "text": "Hit 200 adoptions and 5K downloads across 50 partner shelters."
       }
     ],
-    "earlyPerk": "Lifetime premium, free"
+    "earlyPerk": "Lifetime premium, free",
+    "videoSeconds": 41
   },
   {
     "id": "7",
@@ -337,7 +343,8 @@
         "date": "2026-03-21T00:00:00Z",
         "text": "800 teachers in the pilot reached 15K students this term."
       }
-    ]
+    ],
+    "videoSeconds": 48
   },
   {
     "id": "8",
@@ -386,7 +393,8 @@
         "date": "2026-03-20T00:00:00Z",
         "text": "Cut empty miles 30% for our first 25 carrier partners at $50K MRR."
       }
-    ]
+    ],
+    "videoSeconds": 55
   },
   {
     "id": "101",
@@ -431,7 +439,8 @@
         "text": "Posted to Ideas — gathering signal before I build."
       }
     ],
-    "earlyPerk": "Subscription exemption for life"
+    "earlyPerk": "Subscription exemption for life",
+    "videoSeconds": 55
   },
   {
     "id": "102",
@@ -476,7 +485,8 @@
         "text": "Posted the idea — 310 signups in 48h. Validation looking real."
       }
     ],
-    "earlyPerk": "60% off forever"
+    "earlyPerk": "60% off forever",
+    "videoSeconds": 31
   },
   {
     "id": "103",
@@ -521,6 +531,7 @@
         "text": "Brainstormed and posted to Ideas today."
       }
     ],
-    "earlyPerk": "First year free"
+    "earlyPerk": "First year free",
+    "videoSeconds": 38
   }
 ]

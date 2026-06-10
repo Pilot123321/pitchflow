@@ -34,6 +34,7 @@ interface Pitch {
   needLabel?: string;
   earlyPerk?: string;
   waitlistCount?: number;
+  videoSeconds?: number;
 }
 
 type TierKey = "launch" | "idea";
@@ -161,7 +162,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
                   }`}
                 />
                 <span
-                  className={`absolute left-4 whitespace-nowrap px-1.5 py-0.5 -rotate-2 rounded-md bg-cream text-ink shadow text-[10px] font-bold transition-all duration-300 ${
+                  className={`absolute left-4 whitespace-nowrap px-1.5 py-0.5 rounded-md bg-cream text-ink shadow text-[10px] font-bold transition-all duration-300 ${
                     isFocal ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-1 pointer-events-none"
                   }`}
                 >

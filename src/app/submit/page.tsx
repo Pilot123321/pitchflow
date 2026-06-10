@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { NEED_CTA, NEED_TYPES, type NeedType } from "@/lib/needs";
 
 const categories = ["AI/ML", "Fintech", "Healthcare", "Climate", "DevTools", "Consumer", "EdTech", "Logistics", "SaaS", "Other"];
 const stages = ["Idea", "Pre-seed", "Seed", "Series A"];
@@ -21,6 +22,9 @@ export default function SubmitPage() {
     traction: "",
     location: "",
     askAmount: "",
+    needType: "users",
+    needLabel: "",
+    earlyPerk: "",
     calendlyUrl: "",
     linkedinUrl: "",
     websiteUrl: "",
@@ -184,6 +188,55 @@ export default function SubmitPage() {
                 />
               </div>
             </div>
+          </div>
+
+          {/* What you need section */}
+          <div className="space-y-4">
+            <h2 className="text-ink/70 text-xs font-bold uppercase tracking-wider">What do you need right now?</h2>
+            <div className="grid grid-cols-1 gap-2">
+              {NEED_TYPES.map((t) => (
+                <label
+                  key={t}
+                  className={`flex items-start gap-3 p-3 rounded-xl border-2 border-dashed cursor-pointer transition-colors ${
+                    form.needType === t ? "border-clay bg-clay/10" : "border-ink/15 hover:border-ink/30"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="needType"
+                    value={t}
+                    checked={form.needType === t}
+                    onChange={() => update("needType", t)}
+                    className="mt-1 w-4 h-4 accent-[#bd580f]"
+                  />
+                  <span className="text-xs leading-relaxed text-ink/70">
+                    <span className="font-bold text-ink">{NEED_CTA[t].icon} {NEED_CTA[t].pickerLabel}</span>
+                    <span className="block text-ink/55 mt-0.5">{NEED_CTA[t].pickerDesc}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+            <div>
+              <label className="text-ink/50 text-xs font-semibold block mb-1.5">Your ask, in your words (shown on the card)</label>
+              <input
+                value={form.needLabel}
+                onChange={(e) => update("needLabel", e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"
+                placeholder={NEED_CTA[form.needType as NeedType].label}
+              />
+            </div>
+            {(form.needType === "users" || form.needType === "marketing") && (
+              <div>
+                <label className="text-ink/50 text-xs font-semibold block mb-1.5">Early perk for supporters</label>
+                <input
+                  value={form.earlyPerk}
+                  onChange={(e) => update("earlyPerk", e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"
+                  placeholder="e.g. 50% off for life, free Pro for a year"
+                />
+                <p className="text-ink/40 text-[10px] mt-1">Supporters who commit as founding testers lock this in as Early Merit</p>
+              </div>
+            )}
           </div>
 
           {/* Video Section */}

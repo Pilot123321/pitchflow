@@ -28,6 +28,7 @@ interface PitchCardProps {
   needLabel?: string;
   earlyPerk?: string;
   waitlistCount?: number;
+  videoSeconds?: number;
   onAction: (id: string) => void;
 }
 
@@ -59,6 +60,7 @@ export default function PitchCard({
   needType,
   needLabel,
   earlyPerk,
+  videoSeconds,
   onAction,
 }: PitchCardProps) {
   const [upvotes, setUpvotes] = useState(initialUpvotes);
@@ -71,27 +73,15 @@ export default function PitchCard({
   const isIdea = tier === "idea";
   const scene = sceneFor(gradient);
 
-  // Pointer position drives the background spotlight and a subtle
-  // 3D tilt of the content panel, so the card answers every move
-  // of the cursor instead of sitting inert under it.
+  // Pointer position drives the background spotlight, so the card
+  // answers every move of the cursor instead of sitting inert under it.
   function handlePointerMove(e: React.PointerEvent) {
     if (e.pointerType !== "mouse") return;
     const el = rootRef.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
-    const nx = (e.clientX - r.left) / r.width;
-    const ny = (e.clientY - r.top) / r.height;
-    el.style.setProperty("--mx", `${nx * 100}%`);
-    el.style.setProperty("--my", `${ny * 100}%`);
-    el.style.setProperty("--rx", `${(nx - 0.5) * 4}deg`);
-    el.style.setProperty("--ry", `${(0.5 - ny) * 4}deg`);
-  }
-
-  function resetPointer() {
-    const el = rootRef.current;
-    if (!el) return;
-    el.style.setProperty("--rx", "0deg");
-    el.style.setProperty("--ry", "0deg");
+    el.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+    el.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
   }
 
   async function handleUpvote() {
@@ -117,8 +107,8 @@ export default function PitchCard({
     <div
       ref={rootRef}
       onPointerMove={handlePointerMove}
-      onPointerLeave={resetPointer}
-      className="h-full w-full relative flex items-end overflow-hidden"
+      className="h-full w-full relative flex flex-col overflow-hidden"
+      style={{ "--reel-duration": `${videoSeconds ?? 45}s` } as CSSProperties}
     >
       {/* Background scenery (simulates video), parallax-linked to scroll */}
       <div className={`absolute inset-0 feed-card-bg bg-gradient-to-br ${scene}`}>
@@ -130,25 +120,39 @@ export default function PitchCard({
         <div className="absolute inset-0 feed-spotlight" />
       </div>
 
-      {/* Idea tag: hand-placed sticker */}
-      {isIdea && (
-        <div className="absolute top-28 left-4 z-10 px-2.5 py-1 -rotate-2 rounded-md bg-cream text-ink border border-dashed border-ink/30 text-[10px] font-bold uppercase tracking-wider shadow reveal">
-          💡 Idea · validating
-        </div>
-      )}
+      {/* Reel progress frame: fills clockwise while the reel "plays" */}
+      <div className="absolute left-1.5 right-1.5 top-[6.25rem] bottom-[4.25rem] z-20 pointer-events-none" aria-hidden>
+        <svg className="reel-frame w-full h-full">
+          <rect className="reel-track" x="2" y="2" rx="18" pathLength={100}
+            style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
+            stroke="rgba(253, 247, 234, 0.2)" strokeWidth="3.5" />
+          <rect className="reel-progress" x="2" y="2" rx="18" pathLength={100}
+            style={{ width: "calc(100% - 4px)", height: "calc(100% - 4px)" }}
+            stroke="rgba(253, 247, 234, 0.95)" strokeWidth="3.5" strokeLinecap="round" />
+        </svg>
+      </div>
 
-      {/* Play button overlay: biased upward so it clears the paper card */}
-      <div className="absolute inset-0 flex items-center justify-center pb-64">
+      {/* Scene zone: everything above the paper card lives here, so the
+          play button and action rail can never collide with the card. */}
+      <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center pt-24">
+        {/* Idea tag: hand-placed sticker */}
+        {isIdea && (
+          <div className="absolute top-28 left-4 px-2.5 py-1 -rotate-2 rounded-md bg-cream text-ink border border-dashed border-ink/30 text-[10px] font-bold uppercase tracking-wider shadow reveal">
+            💡 Idea · validating
+          </div>
+        )}
+
+        {/* Play button: dead-center of the scene zone */}
         <div className="breathe w-20 h-20 rounded-full bg-cream/15 backdrop-blur-sm flex items-center justify-center border-2 border-cream/40">
           <svg className="w-8 h-8 text-cream ml-1" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 5v14l11-7z" />
           </svg>
         </div>
-      </div>
 
-      {/* Right side action stickers */}
-      <div className="absolute right-4 bottom-64 flex flex-col items-center gap-5 z-10 feed-card-content">
-        <Link href={`/pitch/${id}`} className="flex flex-col items-center rotate-2">
+        {/* Action stickers: vertically centered on the scene zone's right
+            edge, mirroring the overview rail on the left */}
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-12 sticker-rail flex flex-col items-center gap-5 feed-card-content">
+        <Link href={`/pitch/${id}`} className="flex flex-col items-center">
           <div className="w-12 h-12 rounded-full bg-cream flex items-center justify-center text-ink font-bold text-sm border-2 border-ink/10 shadow-md">
             {founderName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
           </div>
@@ -159,7 +163,7 @@ export default function PitchCard({
           </div>
         </Link>
 
-        <button onClick={handleUpvote} className="relative flex flex-col items-center gap-1 group -rotate-2">
+        <button onClick={handleUpvote} className="relative flex flex-col items-center gap-1 group">
           {burstKey > 0 && (
             <span key={burstKey} className="absolute inset-0 z-10" aria-hidden>
               {BURST_PARTICLES.map((p, i) => (
@@ -183,7 +187,7 @@ export default function PitchCard({
           <span key={upvotes} className="count-pop text-cream text-xs font-bold drop-shadow">{upvotes}</span>
         </button>
 
-        <Link href={`/pitch/${id}`} className="flex flex-col items-center gap-1 group rotate-1">
+        <Link href={`/pitch/${id}`} className="flex flex-col items-center gap-1 group">
           <div className="w-12 h-12 rounded-full bg-cream/90 text-ink shadow-md flex items-center justify-center group-hover:bg-cream transition-all">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -192,7 +196,7 @@ export default function PitchCard({
           <span className="text-cream text-xs font-bold drop-shadow">{comments}</span>
         </Link>
 
-        <button className="flex flex-col items-center gap-1 group -rotate-1">
+        <button className="flex flex-col items-center gap-1 group">
           <div className="w-12 h-12 rounded-full bg-cream/90 text-ink shadow-md flex items-center justify-center group-hover:bg-cream transition-all">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
@@ -200,12 +204,13 @@ export default function PitchCard({
           </div>
           <span className="text-cream text-xs font-bold drop-shadow">Share</span>
         </button>
+        </div>
       </div>
 
       {/* Bottom paper card. Name + tagline are always legible (the
           "label" zoom level); details cascade in when focal. */}
-      <div className="relative z-10 w-full p-4 pb-[4.5rem] pr-20 feed-card-content">
-        <div className="paper rounded-2xl p-4 -rotate-1">
+      <div className="relative z-10 w-full px-4 pb-[4.5rem] swing-in-wrap feed-card-content">
+        <div className="paper swing-in rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-3 reveal reveal-1">
             <span className="px-2 py-0.5 rounded-md border border-dashed border-lagoon text-lagoon text-[11px] font-bold uppercase tracking-wide">{category}</span>
             <span className="px-2 py-0.5 rounded-md border border-dashed border-moss text-moss text-[11px] font-bold uppercase tracking-wide">{stage}</span>
@@ -243,7 +248,7 @@ export default function PitchCard({
           {/* Early merit perk: what beta testers earn for committing now */}
           {earlyPerk && (
             <div className="mt-3.5 reveal reveal-4">
-              <span className="ticket inline-flex items-center gap-1.5 px-3.5 py-1 text-clay text-[11px] font-bold uppercase tracking-wide rotate-[0.5deg]">
+              <span className="ticket inline-flex items-center gap-1.5 px-3.5 py-1 text-clay text-[11px] font-bold uppercase tracking-wide">
                 🎟 Early perk · {earlyPerk}
               </span>
             </div>
