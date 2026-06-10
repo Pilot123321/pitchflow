@@ -211,15 +211,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
             >
               RFS
             </Link>
-            <button
-              onClick={toggleSound}
-              aria-label={soundOn ? "Mute reels" : "Unmute reels"}
-              className={`px-2 py-0.5 rounded-md border border-dashed text-[11px] font-bold transition-colors ${
-                soundOn ? "border-clay/60 text-clay" : "border-ink/30 text-ink/50 hover:text-ink"
-              }`}
-            >
-              {soundOn ? "🔊" : "🔇"}
-            </button>
+
           </div>
           <Link
             href="/brainstorm"
@@ -309,7 +301,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
               data-focal={i === focalIndex}
               className="reel-3d h-screen w-full snap-start relative"
             >
-              <PitchCard {...pitch} isFocal={i === focalIndex} soundOn={soundOn} onAction={() => setActionPitch(pitch)} />
+              <PitchCard {...pitch} isFocal={i === focalIndex} soundOn={soundOn} onToggleSound={toggleSound} onAction={() => setActionPitch(pitch)} />
             </div>
           ))
         )}
@@ -335,6 +327,7 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
             </button>
           </div>
           <ul className="text-ink/65 text-[11px] leading-relaxed space-y-1">
+            <li>👆 tap reel = sound · hold 1s = pause</li>
             <li>⇆ swipe the card away to watch clean</li>
             <li>⌨️ j / k or ↑↓ flip reels · L likes</li>
             <li>🛠️ commit to a beta → lock the perk</li>

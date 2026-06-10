@@ -32,6 +32,7 @@ interface PitchCardProps {
   videoSeconds?: number;
   isFocal?: boolean;
   soundOn?: boolean;
+  onToggleSound?: () => void;
   onAction: (id: string) => void;
 }
 
@@ -67,6 +68,7 @@ export default function PitchCard({
   videoSeconds,
   isFocal,
   soundOn,
+  onToggleSound,
   onAction,
 }: PitchCardProps) {
   const [upvotes, setUpvotes] = useState(initialUpvotes);
@@ -74,7 +76,6 @@ export default function PitchCard({
   const [isAnimating, setIsAnimating] = useState(false);
   const [burstKey, setBurstKey] = useState(0);
   const [shared, setShared] = useState(false);
-  const [playing, setPlaying] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -105,6 +106,55 @@ export default function PitchCard({
     if (isFocal) applySound();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [soundOn, isFocal]);
+
+  // Instagram-style touch on the reel: quick tap toggles sound, a
+  // sustained 1s+ hold pauses, release resumes. Vertical drags pass
+  // through to the feed (touch-action: pan-y + movement guard).
+  const [flash, setFlash] = useState<"on" | "off" | null>(null);
+  const holdRef = useRef<{ t: ReturnType<typeof setTimeout> | null; held: boolean; x: number; y: number; id: number }>(
+    { t: null, held: false, x: 0, y: 0, id: -1 }
+  );
+
+  function onReelDown(e: React.PointerEvent) {
+    const h = holdRef.current;
+    h.id = e.pointerId;
+    h.x = e.clientX;
+    h.y = e.clientY;
+    h.held = false;
+    h.t = setTimeout(() => {
+      h.held = true;
+      ytCommand("pauseVideo");
+      videoRef.current?.pause();
+    }, 1000);
+  }
+
+  function onReelMove(e: React.PointerEvent) {
+    const h = holdRef.current;
+    if (h.id !== e.pointerId || h.held) return;
+    if (Math.hypot(e.clientX - h.x, e.clientY - h.y) > 12 && h.t) {
+      clearTimeout(h.t);
+      h.t = null;
+      h.id = -1;
+    }
+  }
+
+  function onReelUp(e: React.PointerEvent) {
+    const h = holdRef.current;
+    if (h.id !== e.pointerId) return;
+    if (h.t) clearTimeout(h.t);
+    h.id = -1;
+    if (h.held) {
+      h.held = false;
+      ytCommand("playVideo");
+      videoRef.current?.play().catch(() => {});
+    } else if (h.t !== null) {
+      const next = !soundOn;
+      onToggleSound?.();
+      setFlash(next ? "on" : "off");
+      setTimeout(() => setFlash(null), 700);
+    }
+    h.t = null;
+  }
   const cardRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef({ x: 0, y: 0, armed: false, id: -1 });
 
@@ -134,24 +184,12 @@ export default function PitchCard({
     if (!v) return;
     if (isFocal) {
       v.currentTime = 0;
-      v.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+      v.play().catch(() => {});
     } else {
       v.pause();
-      setPlaying(false);
       rootRef.current?.style.setProperty("--played", "0");
     }
   }, [isFocal, isVideo]);
-
-  function togglePlay() {
-    const v = videoRef.current;
-    if (!v) return;
-    if (v.paused) {
-      v.play().then(() => setPlaying(true)).catch(() => {});
-    } else {
-      v.pause();
-      setPlaying(false);
-    }
-  }
 
   function handleTimeUpdate() {
     const v = videoRef.current;
@@ -315,7 +353,11 @@ export default function PitchCard({
           clipped to the border's rounded rect, one player at a time */}
       {isEmbed && isFocal && (
         <div
-          className={`absolute z-[2] ${frameGeom} left-1/2 -translate-x-1/2 aspect-[9/16] max-w-[calc(100%-8px)]`}
+          onPointerDown={onReelDown}
+          onPointerMove={onReelMove}
+          onPointerUp={onReelUp}
+          onPointerCancel={onReelUp}
+          className={`absolute z-[2] ${frameGeom} left-1/2 -translate-x-1/2 aspect-[9/16] max-w-[calc(100%-8px)] [touch-action:pan-y]`}
         >
           <div className="absolute inset-[2px] rounded-[16px] overflow-hidden bg-black/40">
             <iframe
@@ -328,6 +370,13 @@ export default function PitchCard({
               referrerPolicy="strict-origin-when-cross-origin"
             />
           </div>
+          {flash && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="count-pop w-16 h-16 rounded-full bg-black/55 backdrop-blur-sm flex items-center justify-center text-3xl">
+                {flash === "on" ? "🔊" : "🔇"}
+              </div>
+            </div>
+          )}
         </div>
       )}
       {isEmbed && (
@@ -376,7 +425,7 @@ export default function PitchCard({
 
       {/* Scene zone: everything above the paper card lives here, so the
           play button and action rail can never collide with the card. */}
-      <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center pt-24">
+      <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center pt-24 pointer-events-none">
         {/* Idea tag: hand-placed sticker */}
         {isIdea && (
           <div className="absolute top-[8.5rem] left-5 px-2.5 py-1 -rotate-2 rounded-md bg-cream text-ink border border-dashed border-ink/30 text-[10px] font-bold uppercase tracking-wider shadow reveal">
@@ -386,25 +435,7 @@ export default function PitchCard({
 
         {/* Play button: dead-center of the scene zone; a real control
             when the pitch has a video */}
-        {!isEmbed && (
-        <button
-          onClick={isVideo ? togglePlay : undefined}
-          aria-label={playing ? "Pause pitch video" : "Play pitch video"}
-          className={`breathe w-20 h-20 rounded-full bg-ink/10 backdrop-blur-sm flex items-center justify-center border-2 border-ink/40 transition-opacity duration-500 ${
-            playing ? "opacity-25 hover:opacity-90" : "opacity-100"
-          }`}
-        >
-          {playing ? (
-            <svg className="w-8 h-8 text-ink" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M7 5h4v14H7zM13 5h4v14h-4z" />
-            </svg>
-          ) : (
-            <svg className="w-8 h-8 text-ink ml-1" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          )}
-        </button>
-        )}
+
 
       </div>
 
