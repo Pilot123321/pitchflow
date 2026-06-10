@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fdf7ea;
+  --foreground: #43290f;
 }
 
 @theme inline {
@@ -10,17 +10,225 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fredoka);
+
+  /* Hack the North-inspired palette: warm paper + scrapbook inks */
+  --color-cream: #fdf7ea;
+  --color-ink: #43290f;
+  --color-clay: #bd580f;
+  --color-brick: #aa2222;
+  --color-lagoon: #007899;
+  --color-moss: #698019;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  overflow: hidden;
+}
+
+/* Smooth snap scrolling */
+.snap-y {
+  scroll-snap-type: y mandatory;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}
+
+/* Custom scrollbar hide utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Modal slide-up animation */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+/* Line clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================================================
+   Dynamic UI
+   Each feed card receives two scroll-linked custom properties
+   from FeedView: --focus (1 = centered in viewport, 0 = a full
+   screen away) and --offset (-1..1 signed distance). Everything
+   below derives motion from those two values so the interface
+   stays glued to the user's scroll (focus+context / semantic
+   zoom) instead of playing canned animations.
+   ============================================================ */
+
+/* Background parallax: moves slower than the card itself,
+   creating depth. Over-scaled so edges never peek through. */
+.feed-card-bg {
+  transform: translate3d(0, calc(var(--offset, 0) * -10%), 0) scale(1.12);
+  will-change: transform;
+}
+
+/* Card content: semantic zoom. Off-focus cards dim and sink;
+   the focal card rises to full opacity. Pointer tilt (--rx/--ry,
+   set per-frame from pointermove) rides on the same transform. */
+.feed-card-content {
+  opacity: calc(0.25 + 0.75 * var(--focus, 1));
+  transform: perspective(900px)
+    translate3d(0, calc((1 - var(--focus, 1)) * 28px), 0)
+    rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg));
+  will-change: transform, opacity;
+}
+
+/* Pointer-tracked spotlight on the card background */
+.feed-spotlight {
+  background: radial-gradient(
+    520px circle at var(--mx, 50%) var(--my, 35%),
+    rgba(255, 255, 255, 0.1),
+    transparent 65%
+  );
+}
+
+/* Staggered progressive disclosure: detail rows cascade in only
+   when their card becomes focal (data-focal set by FeedView). */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-focal="true"] .reveal {
+  opacity: 1;
+  transform: none;
+}
+[data-focal="true"] .reveal-1 { transition-delay: 0.06s; }
+[data-focal="true"] .reveal-2 { transition-delay: 0.12s; }
+[data-focal="true"] .reveal-3 { transition-delay: 0.18s; }
+[data-focal="true"] .reveal-4 { transition-delay: 0.24s; }
+[data-focal="true"] .reveal-5 { transition-delay: 0.3s; }
+
+/* Play button breathes only on the focal card */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.07); }
+}
+[data-focal="true"] .breathe {
+  animation: breathe 3.2s ease-in-out infinite;
+}
+
+/* Upvote: overshooting spring instead of a linear bounce */
+@keyframes upvote-spring {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.35); }
+  60% { transform: scale(0.92); }
+  80% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.animate-upvote-spring {
+  animation: upvote-spring 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Particle burst fired from the upvote button */
+@keyframes burst-fly {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+      scale(1.1) rotate(var(--rot, 0deg));
+    opacity: 0;
+  }
+}
+.burst-particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  pointer-events: none;
+  animation: burst-fly 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Upvote count rolls up when it changes */
+@keyframes count-pop {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.count-pop {
+  display: inline-block;
+  animation: count-pop 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Scrapbook paper card: warm cream with a faint pulp grain */
+.paper {
+  background-color: #fdf7ea;
+  background-image: radial-gradient(rgba(67, 41, 15, 0.05) 1px, transparent 0);
+  background-size: 7px 7px;
+  box-shadow: 0 14px 34px rgba(46, 26, 5, 0.28);
+}
+
+/* Ticket stub: punched semicircles on both ends */
+.ticket {
+  background: #f5e9cf;
+  -webkit-mask:
+    radial-gradient(circle 4px at 0 50%, transparent 98%, black) left / 51% 100% no-repeat,
+    radial-gradient(circle 4px at 100% 50%, transparent 98%, black) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 4px at 0 50%, transparent 98%, black) left / 51% 100% no-repeat,
+    radial-gradient(circle 4px at 100% 50%, transparent 98%, black) right / 51% 100% no-repeat;
+}
+
+/* Accessibility: collapse all motion to plain visibility */
+@media (prefers-reduced-motion: reduce) {
+  .feed-card-bg,
+  .feed-card-content {
+    transform: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  [data-focal="true"] .breathe,
+  .animate-upvote-spring,
+  .count-pop {
+    animation: none;
+  }
+  .burst-particle {
+    display: none;
+  }
 }

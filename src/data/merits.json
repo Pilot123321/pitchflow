@@ -1,0 +1,12 @@
+[
+  {
+    "pitchId": "1",
+    "name": "Test Tester",
+    "email": "test@example.com",
+    "tier": "founding",
+    "feedback": "Love the pipeline idea — would use it weekly.",
+    "committed": true,
+    "supporterNumber": 613,
+    "joinedAt": "2026-06-10T04:33:08.515Z"
+  }
+]

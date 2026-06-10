@@ -1,0 +1,526 @@
+[
+  {
+    "id": "1",
+    "founderName": "Sarah Chen",
+    "founderTitle": "CEO & Co-founder",
+    "founderAvatar": "SC",
+    "startupName": "DataWeave",
+    "tagline": "AI-powered data pipelines that build themselves",
+    "description": "We're building the Zapier of data engineering. Point DataWeave at your data sources and it automatically generates, tests, and monitors your ETL pipelines. Currently in beta with 12 companies.",
+    "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "category": "AI/ML",
+    "stage": "Pre-seed",
+    "traction": "12 beta users, $2K MRR",
+    "location": "San Francisco, CA",
+    "askAmount": "$500K",
+    "upvotes": 149,
+    "comments": 23,
+    "chatRequests": 8,
+    "calendlyUrl": "https://calendly.com",
+    "linkedinUrl": "https://linkedin.com",
+    "websiteUrl": "https://example.com",
+    "createdAt": "2026-03-28T10:00:00Z",
+    "gradient": "from-violet-600 to-indigo-800",
+    "tier": "launch",
+    "needType": "users",
+    "needLabel": "Looking for beta testers",
+    "needText": "We need 25 data teams to stress-test the pipeline generator before our public launch. Join the beta and you'll get white-glove onboarding.",
+    "waitlistCount": 613,
+    "watchRate": "82% watch to end",
+    "problem": "Data teams burn weeks hand-building and babysitting brittle ETL pipelines. The moment a source schema changes, everything silently breaks.",
+    "solution": "DataWeave points an agent at your sources and auto-generates tested, self-healing pipelines — then monitors them so you don't have to.",
+    "team": [
+      {
+        "initials": "SC",
+        "name": "Sarah Chen",
+        "role": "CEO · ex-Snowflake"
+      },
+      {
+        "initials": "RK",
+        "name": "Raj Kapoor",
+        "role": "Eng · ex-Airbyte"
+      }
+    ],
+    "updates": [
+      {
+        "date": "2026-03-27T00:00:00Z",
+        "text": "Shipped self-healing schema detection — beta churn dropped to zero this week."
+      },
+      {
+        "date": "2026-03-20T00:00:00Z",
+        "text": "Crossed $2K MRR with our first 12 design partners."
+      }
+    ],
+    "earlyPerk": "50% off for life"
+  },
+  {
+    "id": "2",
+    "founderName": "Marcus Johnson",
+    "founderTitle": "Solo Founder",
+    "founderAvatar": "MJ",
+    "startupName": "GreenLedger",
+    "tagline": "Carbon accounting for SMBs, not just Fortune 500s",
+    "description": "Small businesses will soon face carbon reporting requirements but have zero tools built for them. GreenLedger automatically tracks emissions from existing accounting data. 340 on our waitlist.",
+    "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "category": "Climate",
+    "stage": "Idea",
+    "traction": "340 waitlist signups",
+    "location": "Austin, TX",
+    "askAmount": "$250K",
+    "upvotes": 91,
+    "comments": 15,
+    "chatRequests": 5,
+    "calendlyUrl": "https://calendly.com",
+    "linkedinUrl": "https://linkedin.com",
+    "websiteUrl": "https://example.com",
+    "createdAt": "2026-03-27T14:30:00Z",
+    "gradient": "from-emerald-600 to-teal-800",
+    "tier": "launch",
+    "needType": "users",
+    "needLabel": "Recruiting design partners",
+    "needText": "Looking for 10 small businesses willing to connect their accounting data and shape the first version with us.",
+    "waitlistCount": 340,
+    "watchRate": "74% watch to end",
+    "problem": "Carbon reporting rules are coming for SMBs, but every tool is priced and built for Fortune 500 sustainability teams.",
+    "solution": "GreenLedger reads the accounting data you already have and auto-compiles audit-ready emissions reports — no consultant required.",
+    "team": [
+      {
+        "initials": "MJ",
+        "name": "Marcus Johnson",
+        "role": "Solo founder · ex-Deloitte"
+      }
+    ],
+    "updates": [
+      {
+        "date": "2026-03-26T00:00:00Z",
+        "text": "Hit 340 waitlist signups from two SMB owner communities."
+      }
+    ],
+    "earlyPerk": "Free Pro for 12 months"
+  },
+  {
+    "id": "3",
+    "founderName": "Priya Patel",
+    "founderTitle": "CTO & Co-founder",
+    "founderAvatar": "PP",
+    "startupName": "MedScribe",
+    "tagline": "Voice-to-chart for doctors that actually works",
+    "description": "Doctors spend 2 hours a day on charting. MedScribe listens to patient conversations and generates structured medical notes in real-time. HIPAA compliant. Piloting with 3 clinics.",
+    "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "category": "Healthcare",
+    "stage": "Pre-seed",
+    "traction": "3 pilot clinics, LOIs signed",
+    "location": "Boston, MA",
+    "askAmount": "$750K",
+    "upvotes": 213,
+    "comments": 41,
+    "chatRequests": 19,
+    "calendlyUrl": "https://calendly.com",
+    "linkedinUrl": "https://linkedin.com",
+    "websiteUrl": "https://example.com",
+    "createdAt": "2026-03-26T09:15:00Z",
+    "gradient": "from-rose-600 to-pink-800",
+    "tier": "launch",
+    "needType": "investors",
+    "needLabel": "Raising a pre-seed round",
+    "needText": "Talking to healthcare-focused angels and funds to close $750K. Book a chat if clinical AI tooling is in your wheelhouse.",
+    "waitlistCount": 0,
+    "watchRate": "88% watch to end",
+    "problem": "Physicians lose ~2 hours a day to charting — the single biggest driver of burnout — and existing dictation tools still need heavy editing.",
+    "solution": "MedScribe listens to the visit and produces a structured, HIPAA-compliant note in real time, with the doctor only reviewing, not typing.",
+    "team": [
+      {
+        "initials": "PP",
+        "name": "Priya Patel",
+        "role": "CTO · ex-Epic"
+      },
+      {
+        "initials": "DN",
+        "name": "Dr. Nia Okoro",
+        "role": "Clinical lead · MD"
+      }
+    ],
+    "updates": [
+      {
+        "date": "2026-03-25T00:00:00Z",
+        "text": "Signed LOIs with all 3 pilot clinics — moving to paid contracts next month."
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "founderName": "Jake Williams",
+    "founderTitle": "Founder & CEO",
+    "founderAvatar": "JW",
+    "startupName": "StackPilot",
+    "tagline": "AI code review that catches what linters miss",
+    "description": "StackPilot reviews your PRs for business logic bugs, security vulnerabilities, and architectural anti-patterns. Not just style — actual bugs. Integrates with GitHub in 2 minutes.",
+    "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "category": "DevTools",
+    "stage": "Seed",
+    "traction": "$8K MRR, 45 teams",
+    "location": "Remote",
+    "askAmount": "$1.5M",
+    "upvotes": 312,
+    "comments": 67,
+    "chatRequests": 24,
+    "calendlyUrl": "https://calendly.com",
+    "linkedinUrl": "https://linkedin.com",
+    "websiteUrl": "https://example.com",
+    "createdAt": "2026-03-25T16:45:00Z",
+    "gradient": "from-amber-600 to-orange-800",
+    "tier": "launch",
+    "needType": "investors",
+    "needLabel": "Raising a seed round",
+    "needText": "Growing 30% MoM and opening a $1.5M seed. Book a chat if you back developer tooling.",
+    "waitlistCount": 0,
+    "watchRate": "79% watch to end",
+    "problem": "Linters catch formatting; they miss the bugs that actually ship — broken business logic, security holes, architectural drift.",
+    "solution": "StackPilot reasons about your PR like a senior engineer would, flagging real defects and integrating with GitHub in two minutes.",
+    "team": [
+      {
+        "initials": "JW",
+        "name": "Jake Williams",
+        "role": "CEO · ex-GitHub"
+      },
+      {
+        "initials": "ML",
+        "name": "Mei Lin",
+        "role": "Eng · ex-Sentry"
+      },
+      {
+        "initials": "AB",
+        "name": "Andre Brooks",
+        "role": "GTM"
+      }
+    ],
+    "updates": [
+      {
+        "date": "2026-03-24T00:00:00Z",
+        "text": "Passed $8K MRR across 45 teams — net revenue retention now 118%."
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "founderName": "Aisha Rahman",
+    "founderTitle": "CEO & Co-founder",
+    "founderAvatar": "AR",
+    "startupName": "NomadPay",
+    "tagline": "Payroll for companies with globally distributed teams",
+    "description": "Hiring globally is easy now. Paying globally is still a nightmare. NomadPay handles payroll, compliance, and taxes in 40+ countries from a single dashboard. Already processing $200K/month.",
+    "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "category": "Fintech",
+    "stage": "Seed",
+    "traction": "$200K/mo processed, 18 companies",
+    "location": "Dubai, UAE",
+    "askAmount": "$2M",
+    "upvotes": 178,
+    "comments": 34,
+    "chatRequests": 15,
+    "calendlyUrl": "https://calendly.com",
+    "linkedinUrl": "https://linkedin.com",
+    "websiteUrl": "https://example.com",
+    "createdAt": "2026-03-24T11:20:00Z",
+    "gradient": "from-cyan-600 to-blue-800",
+    "tier": "launch",
+    "needType": "investors",
+    "needLabel": "Raising a seed round",
+    "needText": "Processing $200K/mo and expanding across MENA. Opening a $2M round — let's talk if fintech infra is your thesis.",
+    "waitlistCount": 0,
+    "watchRate": "76% watch to end",
+    "problem": "Hiring globally is solved; paying globally isn't. Founders juggle local processors, compliance, and tax filings in every country.",
+    "solution": "NomadPay runs payroll, compliance, and taxes across 40+ countries from one dashboard.",
+    "team": [
+      {
+        "initials": "AR",
+        "name": "Aisha Rahman",
+        "role": "CEO · ex-Wise"
+      },
+      {
+        "initials": "OF",
+        "name": "Omar Farouk",
+        "role": "Compliance"
+      }
+    ],
+    "updates": [
+      {
+        "date": "2026-03-23T00:00:00Z",
+        "text": "Crossed $200K/mo in processed payroll across 18 companies."
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "founderName": "Tom Bradley",
+    "founderTitle": "Founder",
+    "founderAvatar": "TB",
+    "startupName": "PetMatch",
+    "tagline": "Swipe to find your adoptable pet match",
+    "description": "Shelters have terrible UX. PetMatch lets you set preferences and browse adoptable pets near you. We partner with 50+ shelters and have facilitated 200 adoptions in 3 months.",
+    "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "category": "Consumer",
+    "stage": "Pre-seed",
+    "traction": "200 adoptions, 5K app downloads",
+    "location": "Portland, OR",
+    "askAmount": "$400K",
+    "upvotes": 256,
+    "comments": 52,
+    "chatRequests": 11,
+    "calendlyUrl": "https://calendly.com",
+    "linkedinUrl": "https://linkedin.com",
+    "websiteUrl": "https://example.com",
+    "createdAt": "2026-03-23T08:00:00Z",
+    "gradient": "from-fuchsia-600 to-purple-800",
+    "tier": "launch",
+    "needType": "users",
+    "needLabel": "Looking for early users",
+    "needText": "Expanding to new cities — join the waitlist to get PetMatch in your area and help us prioritize shelters near you.",
+    "waitlistCount": 1840,
+    "watchRate": "85% watch to end",
+    "problem": "Shelter adoption flows are clunky and offline, so adoptable pets sit unseen while would-be adopters give up.",
+    "solution": "PetMatch makes discovery delightful — set preferences, browse pets near you, and start an adoption in a tap.",
+    "team": [
+      {
+        "initials": "TB",
+        "name": "Tom Bradley",
+        "role": "Founder · ex-Chewy"
+      }
+    ],
+    "updates": [
+      {
+        "date": "2026-03-22T00:00:00Z",
+        "text": "Hit 200 adoptions and 5K downloads across 50 partner shelters."
+      }
+    ],
+    "earlyPerk": "Lifetime premium, free"
+  },
+  {
+    "id": "7",
+    "founderName": "Linda Park",
+    "founderTitle": "CTO",
+    "founderAvatar": "LP",
+    "startupName": "EduForge",
+    "tagline": "No-code platform for teachers to build interactive lessons",
+    "description": "Teachers aren't developers but they need interactive content. EduForge lets any teacher drag-and-drop simulations, quizzes, and videos into engaging lessons. 800 teachers in our pilot program.",
+    "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "category": "EdTech",
+    "stage": "Pre-seed",
+    "traction": "800 teachers, 15K students reached",
+    "location": "Seoul, KR",
+    "askAmount": "$600K",
+    "upvotes": 134,
+    "comments": 28,
+    "chatRequests": 9,
+    "calendlyUrl": "https://calendly.com",
+    "linkedinUrl": "https://linkedin.com",
+    "websiteUrl": "https://example.com",
+    "createdAt": "2026-03-22T13:30:00Z",
+    "gradient": "from-sky-600 to-indigo-800",
+    "tier": "launch",
+    "needType": "cofounder",
+    "needLabel": "Looking for a technical co-founder",
+    "needText": "Strong teacher pull (800 in pilot) but I'm non-technical. Seeking a founding engineer who wants to own the product. Equity, not a salary.",
+    "waitlistCount": 0,
+    "watchRate": "71% watch to end",
+    "problem": "Teachers want interactive lessons but can't code, so they fall back to static slides that don't engage students.",
+    "solution": "EduForge is drag-and-drop: any teacher composes simulations, quizzes, and video into a lesson in minutes.",
+    "team": [
+      {
+        "initials": "LP",
+        "name": "Linda Park",
+        "role": "Founder · 10yr educator"
+      }
+    ],
+    "updates": [
+      {
+        "date": "2026-03-21T00:00:00Z",
+        "text": "800 teachers in the pilot reached 15K students this term."
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "founderName": "Diego Santos",
+    "founderTitle": "CEO & Co-founder",
+    "founderAvatar": "DS",
+    "startupName": "FreightFlow",
+    "tagline": "Real-time freight matching for Latin American logistics",
+    "description": "40% of trucks in LATAM drive empty. FreightFlow uses real-time demand signals to match cargo with available trucks. We've reduced empty miles by 30% for our first 25 carrier partners.",
+    "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "category": "Logistics",
+    "stage": "Seed",
+    "traction": "25 carriers, $50K MRR",
+    "location": "Sao Paulo, BR",
+    "askAmount": "$1.2M",
+    "upvotes": 98,
+    "comments": 19,
+    "chatRequests": 7,
+    "calendlyUrl": "https://calendly.com",
+    "linkedinUrl": "https://linkedin.com",
+    "websiteUrl": "https://example.com",
+    "createdAt": "2026-03-21T17:00:00Z",
+    "gradient": "from-lime-600 to-green-800",
+    "tier": "launch",
+    "needType": "investors",
+    "needLabel": "Raising a seed round",
+    "needText": "Reduced empty miles 30% for 25 carriers at $50K MRR. Raising $1.2M to expand across Brazil — book a chat if LATAM logistics excites you.",
+    "waitlistCount": 0,
+    "watchRate": "73% watch to end",
+    "problem": "40% of trucks in LATAM drive empty because matching cargo to capacity is still phone calls and spreadsheets.",
+    "solution": "FreightFlow matches cargo with nearby available trucks in real time, cutting empty miles and lifting carrier revenue.",
+    "team": [
+      {
+        "initials": "DS",
+        "name": "Diego Santos",
+        "role": "CEO · ex-Loggi"
+      },
+      {
+        "initials": "CV",
+        "name": "Carla Vieira",
+        "role": "Ops"
+      }
+    ],
+    "updates": [
+      {
+        "date": "2026-03-20T00:00:00Z",
+        "text": "Cut empty miles 30% for our first 25 carrier partners at $50K MRR."
+      }
+    ]
+  },
+  {
+    "id": "101",
+    "founderName": "Sam Ortiz",
+    "founderTitle": "Builder",
+    "founderAvatar": "SO",
+    "startupName": "Loophole",
+    "tagline": "A feed of indie side-projects you can fork, sponsor, or buy",
+    "description": "Cool indie projects die in GitHub repos nobody discovers. Loophole is a short-video feed where builders demo a side project others can clone, sponsor, or acquire.",
+    "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "category": "DevTools",
+    "stage": "Idea",
+    "traction": "58 upvotes today",
+    "location": "Austin, TX",
+    "askAmount": "",
+    "upvotes": 58,
+    "comments": 9,
+    "chatRequests": 0,
+    "calendlyUrl": "https://calendly.com",
+    "linkedinUrl": "",
+    "websiteUrl": "",
+    "createdAt": "2026-03-29T08:00:00Z",
+    "gradient": "from-amber-600 to-rose-700",
+    "tier": "idea",
+    "needType": "users",
+    "needLabel": "Validating the idea",
+    "needText": "Would devs browse a feed of small shippable side-projects to clone or buy? Join the waitlist if you'd use this.",
+    "waitlistCount": 58,
+    "watchRate": "idea-stage",
+    "problem": "Great indie projects stay invisible inside GitHub repos with no distribution.",
+    "solution": "A swipeable feed where builders demo a 30s clip of a side project others can fork, sponsor, or buy.",
+    "team": [
+      {
+        "initials": "SO",
+        "name": "Sam Ortiz",
+        "role": "Indie hacker"
+      }
+    ],
+    "updates": [
+      {
+        "date": "2026-03-29T00:00:00Z",
+        "text": "Posted to Ideas — gathering signal before I build."
+      }
+    ],
+    "earlyPerk": "Subscription exemption for life"
+  },
+  {
+    "id": "102",
+    "founderName": "Devin Park",
+    "founderTitle": "Solo founder",
+    "founderAvatar": "DP",
+    "startupName": "Plotline",
+    "tagline": "Turn your messy notes into a publishable draft",
+    "description": "The hardest part of writing isn't the words — it's turning scattered notes into a structure that flows. Plotline proposes an outline and first draft you can argue with.",
+    "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "category": "Consumer",
+    "stage": "Idea",
+    "traction": "310 waitlist signups",
+    "location": "Remote",
+    "askAmount": "",
+    "upvotes": 41,
+    "comments": 6,
+    "chatRequests": 0,
+    "calendlyUrl": "https://calendly.com",
+    "linkedinUrl": "",
+    "websiteUrl": "",
+    "createdAt": "2026-03-29T12:00:00Z",
+    "gradient": "from-sky-600 to-violet-800",
+    "tier": "idea",
+    "needType": "users",
+    "needLabel": "Validating demand",
+    "needText": "Trying to learn if writers actually want this. Join the waitlist if a notes-to-draft tool would save you time.",
+    "waitlistCount": 310,
+    "watchRate": "idea-stage",
+    "problem": "Writers stall not on words but on structure — turning a pile of notes into something that flows.",
+    "solution": "Plotline ingests your raw notes and proposes an outline plus first draft you can edit, not a generic AI blob.",
+    "team": [
+      {
+        "initials": "DP",
+        "name": "Devin Park",
+        "role": "Building solo"
+      }
+    ],
+    "updates": [
+      {
+        "date": "2026-03-29T00:00:00Z",
+        "text": "Posted the idea — 310 signups in 48h. Validation looking real."
+      }
+    ],
+    "earlyPerk": "60% off forever"
+  },
+  {
+    "id": "103",
+    "founderName": "Riley Okafor",
+    "founderTitle": "Builder",
+    "founderAvatar": "RO",
+    "startupName": "Cadence",
+    "tagline": "An AI that plans your week from your goals",
+    "description": "People set goals but never translate them into a realistic week. Cadence auto-blocks your calendar from your goals and adapts as life slips.",
+    "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "category": "Consumer",
+    "stage": "Idea",
+    "traction": "Just posted",
+    "location": "Toronto, CA",
+    "askAmount": "",
+    "upvotes": 12,
+    "comments": 2,
+    "chatRequests": 0,
+    "calendlyUrl": "https://calendly.com",
+    "linkedinUrl": "",
+    "websiteUrl": "",
+    "createdAt": "2026-03-30T09:00:00Z",
+    "gradient": "from-rose-600 to-fuchsia-800",
+    "tier": "idea",
+    "needType": "users",
+    "needLabel": "Testing the idea",
+    "needText": "Looking for 30 people to try it for a week and tell me if it actually helped. Join the waitlist to be one of them.",
+    "waitlistCount": 12,
+    "watchRate": "idea-stage",
+    "problem": "People set ambitious goals but never turn them into a realistic week, so the goals quietly die.",
+    "solution": "Cadence auto-blocks your calendar from your goals and re-plans automatically when life gets in the way.",
+    "team": [
+      {
+        "initials": "RO",
+        "name": "Riley Okafor",
+        "role": "Building solo"
+      }
+    ],
+    "updates": [
+      {
+        "date": "2026-03-30T00:00:00Z",
+        "text": "Brainstormed and posted to Ideas today."
+      }
+    ],
+    "earlyPerk": "First year free"
+  }
+]
