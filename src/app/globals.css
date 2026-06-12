@@ -486,3 +486,17 @@ body[data-lights="down"] .chrome-dim {
     display: none;
   }
 }
+
+/* Active feed-tab anchor star: a slow twinkle, still when inactive */
+@keyframes tab-anchor {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.tab-anchor {
+  animation: tab-anchor 2.4s ease-in-out infinite;
+}

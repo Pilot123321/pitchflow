@@ -7,7 +7,6 @@ import PitchCard from "./PitchCard";
 import CoffeeChatModal from "./CoffeeChatModal";
 import WaitlistModal from "./WaitlistModal";
 import type { NeedType } from "@/lib/needs";
-import { sceneFor } from "@/lib/scenes";
 import { paletteFor } from "@/lib/palette";
 import { sky } from "@/components/AuroraSky";
 import Constellation3D from "@/components/Constellation3D";
@@ -45,9 +44,65 @@ interface Pitch {
 type TierKey = "launch" | "idea";
 
 const TABS: { key: TierKey; label: string }[] = [
-  { key: "launch", label: "🚀 Launches" },
-  { key: "idea", label: "💡 Ideas" },
+  { key: "launch", label: "Launches" },
+  { key: "idea", label: "Ideas" },
 ];
+
+// Tab marks in the same constellation language as the startup sigils:
+// Launches is an ascent plotted through stars — the route out of the launch
+// window; Ideas is a young spark radiating to stars that aren't lit yet.
+// The anchor star twinkles only on the active tab.
+function TabGlyph({ kind, active }: { kind: TierKey; active: boolean }) {
+  if (kind === "launch") {
+    const stars: [number, number, number][] = [
+      [4.5, 19.5, 0.9],
+      [9.5, 15.5, 1.0],
+      [13.5, 10.5, 1.1],
+      [19, 4.5, 1.7],
+    ];
+    return (
+      <svg viewBox="0 0 24 24" width={15} height={15} aria-hidden className="shrink-0">
+        <polyline
+          points={stars.map(([x, y]) => `${x},${y}`).join(" ")}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.9"
+          strokeLinejoin="round"
+          opacity="0.45"
+        />
+        {stars.map(([x, y, r], i) => (
+          <circle
+            key={i}
+            cx={x}
+            cy={y}
+            r={r}
+            fill="currentColor"
+            opacity={i === stars.length - 1 ? 1 : 0.5 + i * 0.12}
+            className={active && i === stars.length - 1 ? "tab-anchor" : undefined}
+          />
+        ))}
+      </svg>
+    );
+  }
+  const sparks: [number, number, number][] = [
+    [12, 4.5, 1.0],
+    [19, 9, 0.9],
+    [17, 17.5, 1.0],
+    [7, 18.5, 0.9],
+    [4.5, 9.5, 1.0],
+  ];
+  return (
+    <svg viewBox="0 0 24 24" width={15} height={15} aria-hidden className="shrink-0">
+      {sparks.map(([x, y], i) => (
+        <line key={`l${i}`} x1={12} y1={12} x2={x} y2={y} stroke="currentColor" strokeWidth="0.9" opacity="0.4" />
+      ))}
+      {sparks.map(([x, y, r], i) => (
+        <circle key={i} cx={x} cy={y} r={r} fill="currentColor" opacity="0.6" />
+      ))}
+      <circle cx={12} cy={12} r={2} fill="currentColor" className={active ? "tab-anchor" : undefined} />
+    </svg>
+  );
+}
 
 export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }) {
   const router = useRouter();
@@ -226,10 +281,11 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
             <button
               key={t.key}
               onClick={() => setTier(t.key)}
-              className={`relative font-display text-sm font-semibold pb-1.5 transition-colors ${
+              className={`relative flex items-center gap-1.5 font-display text-sm font-semibold pb-1.5 transition-colors ${
                 tier === t.key ? "text-ink" : "text-ink/40 hover:text-ink/70"
               }`}
             >
+              <TabGlyph kind={t.key} active={tier === t.key} />
               {t.label}
               {tier === t.key && (
                 <span className="absolute left-1/2 -translate-x-1/2 bottom-0 w-6 h-[3px] rounded-full bg-clay" />
@@ -239,43 +295,6 @@ export default function FeedView({ initialPitches }: { initialPitches: Pitch[] }
         </div>
         <div className="absolute left-0 right-0 top-full h-3.5 film-edge" aria-hidden />
       </div>
-
-      {/* Overview+detail rail: a minimap of the feed. The focal dot
-          stretches and labels itself; any dot jumps to its pitch. */}
-      {pitches.length > 1 && (
-        <nav
-          aria-label="Pitch overview"
-          className="chrome-dim fixed left-6 top-[36%] -translate-y-1/2 z-40 flex flex-col items-start gap-2"
-        >
-          {pitches.map((p, i) => {
-            const isFocal = i === focalIndex;
-            return (
-              <button
-                key={p.id}
-                onClick={() => scrollToIndex(i)}
-                aria-label={`Go to ${p.startupName}`}
-                aria-current={isFocal}
-                className="group relative flex items-center py-0.5"
-              >
-                <span
-                  className={`block rounded-[3px] bg-gradient-to-br ${sceneFor(p.gradient)} transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
-                    isFocal
-                      ? "w-4 h-6 ring-2 ring-ink/70 shadow-md"
-                      : "w-3 h-2 opacity-60 ring-1 ring-ink/25 group-hover:opacity-100"
-                  }`}
-                />
-                <span
-                  className={`absolute left-3 whitespace-nowrap px-1.5 py-0.5 rounded-md bg-cream text-ink shadow text-[9px] font-bold transition-all duration-300 ${
-                    isFocal ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-1 pointer-events-none"
-                  }`}
-                >
-                  {p.startupName}
-                </span>
-              </button>
-            );
-          })}
-        </nav>
-      )}
 
       {/* 3D constellation of the focal startup, floating in the sky */}
       <Constellation3D />

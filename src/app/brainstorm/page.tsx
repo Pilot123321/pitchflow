@@ -1,91 +1,78 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { FrameworkBuilder3D, FrameNode } from "@/components/FrameworkBuilder3D";
 
 const categories = ["AI/ML", "Fintech", "Healthcare", "Climate", "DevTools", "Consumer", "EdTech", "Logistics", "SaaS", "Other"];
 
-interface Draft {
-  startupName: string;
-  tagline: string;
-  category: string;
-  problem: string;
-  solution: string;
-  needText: string;
-  reelScript: string[];
-  founderName: string;
-  location: string;
-}
-
-// Scripted "coach": turns a raw idea into a structured, editable draft.
-// (Swap this for a real LLM call later — the shape is what matters.)
-function structureIdea(idea: string): Draft {
+// Seed the constellation from one messy sentence — the coach drafts the first
+// three stars (hook/problem/solution); the founder shapes the rest in 3D.
+function seedFrame(idea: string): Record<string, string> {
   const i = idea.trim().replace(/\.$/, "");
   const cap = i.charAt(0).toUpperCase() + i.slice(1);
   return {
-    startupName: "",
-    tagline: cap,
-    category: "Consumer",
+    hook: cap,
     problem: `Today, people handle "${i}" through clunky, manual workarounds that don't scale and waste their time.`,
     solution: `${cap} — designed to make this effortless, fast, and genuinely delightful from the very first use.`,
-    needText: "Looking for 30 early users to try this for a week and tell me if it actually helps. Join the waitlist to be one of them.",
-    reelScript: [
-      "Hook (0–5s): the painful moment your user keeps hitting.",
-      "Demo (5–40s): show the one magic interaction that fixes it.",
-      "Ask (40–60s): \"Join the waitlist — I want your feedback.\"",
-    ],
-    founderName: "",
-    location: "",
   };
 }
 
 export default function BrainstormPage() {
   const router = useRouter();
-  const [step, setStep] = useState<"input" | "draft">("input");
+  const [step, setStep] = useState<"input" | "build">("input");
   const [idea, setIdea] = useState("");
-  const [draft, setDraft] = useState<Draft | null>(null);
+  const [seed, setSeed] = useState<Record<string, string>>({});
+  const [nodes, setNodes] = useState<FrameNode[]>([]);
+  const [startupName, setStartupName] = useState("");
+  const [category, setCategory] = useState("Consumer");
+  const [founderName, setFounderName] = useState("");
+  const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function runCoach() {
-    if (!idea.trim()) return;
-    setDraft(structureIdea(idea));
-    setStep("draft");
-  }
+  const onFrameChange = useCallback((ns: FrameNode[]) => setNodes(ns), []);
 
-  function update<K extends keyof Draft>(key: K, value: Draft[K]) {
-    setDraft((d) => (d ? { ...d, [key]: value } : d));
-  }
+  const text = (id: string) => nodes.find((n) => n.id === id)?.text.trim() ?? "";
+  const ready = !!(startupName.trim() && text("problem") && text("solution"));
 
   async function postToIdeas() {
-    if (!draft) return;
-    if (!draft.startupName || !draft.founderName || !draft.location) {
-      alert("Please fill in your startup name, your name, and location.");
+    if (!ready) return;
+    if (!founderName.trim() || !location.trim()) {
+      alert("Add your name and location, then post.");
       return;
     }
     setLoading(true);
+    const who = text("who");
+    const model = text("model");
+    const moat = text("moat");
+    const solution = [text("solution"), model && `Model: ${model}`, moat && `Moat: ${moat}`]
+      .filter(Boolean)
+      .join(" ");
     try {
       const res = await fetch("/api/pitches", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          founderName: draft.founderName,
+          founderName,
           founderTitle: "Builder",
-          startupName: draft.startupName,
-          tagline: draft.tagline,
-          description: draft.solution,
-          category: draft.category,
+          startupName,
+          tagline: text("hook") || text("solution"),
+          description: text("solution"),
+          category,
           stage: "Idea",
-          location: draft.location,
+          location,
           traction: "Just posted",
           tier: "idea",
           needType: "users",
           needLabel: "Validating the idea",
-          needText: draft.needText,
-          problem: draft.problem,
-          solution: draft.solution,
+          needText: who
+            ? `Looking for 30 early users — especially ${who.replace(/\.$/, "")}. Join the waitlist to be one of them.`
+            : "Looking for 30 early users to try this for a week and tell me if it actually helps. Join the waitlist to be one of them.",
+          problem: text("problem"),
+          solution,
           watchRate: "idea-stage",
-          updates: [{ date: new Date().toISOString(), text: "Brainstormed and posted to Ideas today." }],
+          updates: [{ date: new Date().toISOString(), text: "Framed the idea in 3D and posted to Ideas today." }],
         }),
       });
       if (res.ok) {
@@ -113,7 +100,11 @@ export default function BrainstormPage() {
 
         <div className="mb-7">
           <h1 className="font-display text-ink text-2xl font-semibold mb-1">✦ Brainstorm</h1>
-          <p className="text-ink/50 text-sm">Type a raw idea — the coach shapes it into a postable pitch. Edit anything, then post to the Ideas tier to test demand.</p>
+          <p className="text-ink/50 text-sm">
+            {step === "input"
+              ? "Type a raw idea — then build it into a constellation instead of filling out a form."
+              : "Your startup as a 3D frame. Light the stars that matter, branch your own, then post."}
+          </p>
         </div>
 
         {step === "input" && (
@@ -130,83 +121,83 @@ export default function BrainstormPage() {
               placeholder="e.g. an AI that plans my week from my goals"
             />
             <button
-              onClick={runCoach}
+              onClick={() => {
+                if (!idea.trim()) return;
+                setSeed(seedFrame(idea));
+                setStep("build");
+              }}
               disabled={!idea.trim()}
               className="w-full py-3.5 rounded-full bg-brick text-cream font-display font-semibold text-sm hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-40"
             >
-              Brainstorm it ✦
+              Frame it ✦
+            </button>
+            <button
+              onClick={() => {
+                setSeed({});
+                setStep("build");
+              }}
+              className="w-full py-3 rounded-full bg-ink/10 text-ink font-semibold text-sm hover:bg-ink/15 transition-colors"
+            >
+              Start from empty sky
             </button>
           </div>
         )}
 
-        {step === "draft" && draft && (
-          <div className="space-y-5">
-            <div className="rounded-2xl bg-ink/[0.03] border-2 border-dashed border-ink/15 p-4">
-              <p className="text-ink/80 text-sm">Here&apos;s a structured pitch from your idea. Tweak it, fill the blanks, then post.</p>
-            </div>
-
-            <Field label="Startup name *">
-              <input value={draft.startupName} onChange={(e) => update("startupName", e.target.value)} placeholder="Name your startup" className={inputCls} />
-            </Field>
-            <Field label="One-line pitch">
-              <input value={draft.tagline} onChange={(e) => update("tagline", e.target.value)} className={inputCls} />
-            </Field>
-            <Field label="Category">
-              <select value={draft.category} onChange={(e) => update("category", e.target.value)} className={inputCls}>
-                {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+        {step === "build" && (
+          <div className="space-y-4">
+            <div className="flex gap-3">
+              <input
+                value={startupName}
+                onChange={(e) => setStartupName(e.target.value)}
+                placeholder="Name your startup *"
+                className="flex-1 px-4 py-2.5 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"
+              />
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="px-3 py-2.5 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm focus:outline-none focus:border-clay transition-colors"
+              >
+                {categories.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
               </select>
-            </Field>
-            <Field label="The problem">
-              <textarea value={draft.problem} onChange={(e) => update("problem", e.target.value)} rows={3} className={`${inputCls} resize-none`} />
-            </Field>
-            <Field label="The solution">
-              <textarea value={draft.solution} onChange={(e) => update("solution", e.target.value)} rows={3} className={`${inputCls} resize-none`} />
-            </Field>
-            <Field label="What you need">
-              <textarea value={draft.needText} onChange={(e) => update("needText", e.target.value)} rows={2} className={`${inputCls} resize-none`} />
-            </Field>
-
-            <div className="rounded-2xl bg-ink/[0.03] border-2 border-dashed border-ink/15 p-4">
-              <p className="text-ink/50 text-[11px] font-bold uppercase tracking-wider mb-2">Suggested 45–60s reel</p>
-              {draft.reelScript.map((line, i) => (
-                <p key={i} className="text-ink/70 text-sm leading-relaxed mb-1">• {line}</p>
-              ))}
             </div>
+
+            <FrameworkBuilder3D seed={seed} onChange={onFrameChange} />
 
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Your name *">
-                <input value={draft.founderName} onChange={(e) => update("founderName", e.target.value)} placeholder="Jane Smith" className={inputCls} />
-              </Field>
-              <Field label="Location *">
-                <input value={draft.location} onChange={(e) => update("location", e.target.value)} placeholder="Remote" className={inputCls} />
-              </Field>
+              <input
+                value={founderName}
+                onChange={(e) => setFounderName(e.target.value)}
+                placeholder="Your name *"
+                className="px-4 py-2.5 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"
+              />
+              <input
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="Location *"
+                className="px-4 py-2.5 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors"
+              />
             </div>
 
             <button
               onClick={postToIdeas}
-              disabled={loading}
-              className="w-full py-4 rounded-full bg-brick text-cream font-display font-semibold text-sm hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
+              disabled={loading || !ready}
+              className="w-full py-4 rounded-full bg-brick text-cream font-display font-semibold text-sm hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-40"
             >
-              {loading ? "Posting..." : "Post to Ideas 💡"}
+              {loading ? "Posting..." : ready ? "Post to Ideas ✦" : "Light Problem + Solution to post"}
             </button>
-            <button onClick={() => setStep("input")} className="w-full py-3 rounded-full bg-ink/10 text-ink font-semibold text-sm hover:bg-ink/15 transition-colors">
+            <button
+              onClick={() => setStep("input")}
+              className="w-full py-3 rounded-full bg-ink/10 text-ink font-semibold text-sm hover:bg-ink/15 transition-colors"
+            >
               Start over
             </button>
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-const inputCls =
-  "w-full px-4 py-3 rounded-xl bg-ink/5 border border-ink/15 text-ink text-sm placeholder:text-ink/35 focus:outline-none focus:border-clay transition-colors";
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <label className="text-ink/50 text-xs font-semibold block mb-1.5">{label}</label>
-      {children}
     </div>
   );
 }
